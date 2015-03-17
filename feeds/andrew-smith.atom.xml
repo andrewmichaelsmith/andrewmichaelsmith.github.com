@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Andy Smith's Blog</title><link href="http://andrewmichaelsmith.com/" rel="alternate"></link><link href="http://andrewmichaelsmith.com/feeds/andrew-smith.atom.xml" rel="self"></link><id>http://andrewmichaelsmith.com/</id><updated>2015-03-16T00:00:00+00:00</updated><entry><title>Running manuka docker honeypot</title><link href="http://andrewmichaelsmith.com/2015/03/running-manuka-docker-honeypot/" rel="alternate"></link><updated>2015-03-16T00:00:00+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2015-03-16:2015/03/running-manuka-docker-honeypot/</id><summary type="html">&lt;p&gt;I've just got ionaea and kippo running in docker images on to make a quick to 
+set up honeypot.&lt;/p&gt;
+&lt;p&gt;Here's how to do it on Ubuntu 14.04.1:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#install docker&lt;/span&gt;
+sudo apt-get update
+sudo apt-get -y install docker.io
+
+&lt;span class="c"&gt;#install docker-compose&lt;/span&gt;
+sudo apt-get update &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt-get install -y python-pip
+sudo pip install docker-compose
+
+&lt;span class="c"&gt;#run manuka&lt;/span&gt;
+curl -q https://raw.githubusercontent.com/andrewmichaelsmith/manuka/master/run.sh &amp;gt; run.sh
+chmod +x run.sh
+sudo ./run.sh
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You have just setup dionaea and kippo.&lt;/p&gt;
+&lt;p&gt;Let's test dionaea out:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo nmap  -d -p &lt;span class="m"&gt;445&lt;/span&gt; 127.0.0.1 --script&lt;span class="o"&gt;=&lt;/span&gt;smb-vuln-ms10-061 &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;
+ls var/dionaea/bistreams
+ll var/dionaea/bistreams
+&lt;span class="c"&gt;# &amp;gt; total 4.0K&lt;/span&gt;
+&lt;span class="c"&gt;# &amp;gt; drwxr-xr-x 2 nobody nogroup 4.0K Mar 16 23:21 2015-03-16&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And what about kippo?&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;ssh root@localhost
+# &amp;gt; Password: &amp;lt;12345&amp;gt;
+# &amp;gt; root@svr03:~#
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;All logs and files will be saved under $PWD/var/.&lt;/p&gt;
+&lt;p&gt;Happy to hear any bug reports and feature requests on 
+&lt;a href="https://github.com/andrewmichaelsmith/manuka"&gt;Github&lt;/a&gt;.&lt;/p&gt;</summary><category term="honeypot"></category><category term="docker"></category><category term="dionaea"></category><category term="kippo"></category></entry><entry><title>Docker volume and docker VOLUME</title><link href="http://andrewmichaelsmith.com/2014/05/docker-volume-and-docker-volume/" rel="alternate"></link><updated>2014-05-19T22:01:00+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2014-05-19:2014/05/docker-volume-and-docker-volume/</id><summary type="html">&lt;p&gt;I've been fiddling with docker lately and it took me a while to come to this 
+realisation. The docker volume command line argument and the docker VOLUME
+Dockerfile instruction are a bit different.&lt;/p&gt;
+&lt;p&gt;The docker volume command line argument:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;docker run -v /var/logs:/var/logs ubuntu &lt;span class="nb"&gt;echo test&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And the docker VOLUME Dockerfile instruction:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;VOLUME /var/logs
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The Dockerfile VOLUME instruction doesn't support host directories.&lt;/p&gt;
+&lt;p&gt;As discussed in this &lt;a href="http://stackoverflow.com/a/18884005"&gt;stackoverflow post&lt;/a&gt;
+it looks like this is intentional because it makes things less portable.&lt;/p&gt;</summary><category term="docker"></category><category term="volume"></category><category term="VOLUME"></category></entry><entry><title>Quick and Easy SSH MITM</title><link href="http://andrewmichaelsmith.com/2014/03/quick-and-easy-ssh-mitm/" rel="alternate"></link><updated>2014-03-13T22:19:00+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2014-03-13:2014/03/quick-and-easy-ssh-mitm/</id><summary type="html">&lt;p&gt;A quick intro to using &lt;a href="https://github.com/mitmproxy/mitmproxy"&gt;mitmproxy&lt;/a&gt; to
+man-in-the-middle an SSH connection.&lt;/p&gt;
+&lt;p&gt;So you want to sniff an SSH connection (that you have access to) but wireshark
+is giving you junk? Luckily someone has written a tool for that. The
+&lt;a href="https://github.com/mitmproxy/mitmproxy"&gt;mitmproxy&lt;/a&gt; by Maximilian Hils allows
+you to plop a fake server in between your SSH client and the SSH server
+you're connecting to.&lt;/p&gt;
+&lt;p&gt;(Confusingly this is not the same as the other, more well known
+&lt;a href="http://mitmproxy.org/"&gt;mitmproxy&lt;/a&gt; which only does HTTPS and HTTP)&lt;/p&gt;
+&lt;p&gt;I wanted to have a nose at the data sent from git to github over SSH. This is 
+what I did.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# Download mitmproxy
+git clone https://github.com/mitmproxy/mitmproxy.git
+
+#Generate mitm keys (these go to ~/.mitmkeys)
+./mitmkeys
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now you want to install the SSH key you just generated to the server you want
+to mitm. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#Install SSH key
+ssh-copy-id -i ~/.mitmkeys/id_rsa.pub user@victimserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then run the proxy, pointing it at the victimserver.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#Run proxy
+./mitmproxy_ssh -H victimserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This runs the proxy on localhost:2222&lt;/p&gt;
+&lt;p&gt;Now simply connect to the local proxy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;ssh localhost -p 2222
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And ta-da! You should see the raw data sent between client and server in the
+window you ran mitmproxy_ssh.&lt;/p&gt;</summary><category term="ssh"></category><category term="mitm"></category></entry><entry><title>Raspberry Pi Wi-Fi Honeypot</title><link href="http://andrewmichaelsmith.com/2013/08/raspberry-pi-wi-fi-honeypot/" rel="alternate"></link><updated>2013-08-19T16:42:00+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2013-08-19:2013/08/raspberry-pi-wi-fi-honeypot/</id><summary type="html">&lt;p&gt;I wanted to turn my Raspberry Pi in to a "fake" wireless access point that would accept
+Wi-Fi connections without a password but sandbox all requests to a local web server,
+like some hotel Wi-Fi you might encounter.&lt;/p&gt;
+&lt;p&gt;It turns out that to achieve this you need a Wi-Fi dongle that supports "AP Mode".
+I ended up ordering an &lt;a href="http://www.amazon.co.uk/Edimax-EW-7711UAN-Wireless-nLITE-Adapter/dp/B001KOTDDU"&gt;Edimax EW-7711UAN&lt;/a&gt; which has worked perfectly in AP mode with the pi so far.&lt;/p&gt;
+&lt;p&gt;For this tutorial I am assuming that your pi is physically connected to your network via a LAN cable (on eth0). We can't set this up over Wi-Fi because the Wi-Fi network is going to be sandboxed.&lt;/p&gt;
+&lt;h2&gt;Install&lt;/h2&gt;
+&lt;p&gt;So, beginning with a fresh &lt;a href="http://www.raspbian.org/http://www.raspbian.org/"&gt;Raspian&lt;/a&gt; install I installed the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install -y hostapd dnsmasq nginx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;hostapd will allow you to receive connections on your dongle, as if it
+were a wireless router.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dnsmasq will allow the pi to provide DNS and DHCP services which is the bare minimum we need to get the clients to "work" on the network.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nginx is the web server we'll use to serve the dummy files on our sandboxed network.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Configuration&lt;/h2&gt;
+&lt;p&gt;First hostapd:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo touch /etc/hostapd/hostapd.conf
+sudo nano /etc/hostapd/hostapd.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And paste the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;interface=wlan0
+driver=nl80211
+ssid=NotFreeWifi
+channel=1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We also need to tell hostapd where to find this config file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo nano /etc/init.d/hostapd
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Find the line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;DAEMON_CONF=
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And change it to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;DAEMON_CONF=/etc/hostapd/hostapd.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will set your pi up to accept unsecured connections. Don't do it if you
+don't know what you're doing.&lt;/p&gt;
+&lt;p&gt;Next up, dnsmasq:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo nano /etc/dnsmasq.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And paste the following (at the end of the file):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;log-facility=/var/log/dnsmasq.log
+address=/#/10.0.0.1
+interface=wlan0
+dhcp-range=10.0.0.10,10.0.0.250,12h
+no-resolv
+log-queries
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will set up the DHCP server, resolve all DNS lookups to &lt;code&gt;10.0.0.1&lt;/code&gt; and log
+all queries to &lt;code&gt;/var/log/dnsmasq&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now, you may have noticed that we used &lt;code&gt;10.0.0.1&lt;/code&gt; there, the plan is to get the Wi-Fi
+adaptor listening on &lt;code&gt;10.0.0.1&lt;/code&gt;. This is to segregate the open Wi-Fi connections from the regular network:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo nano /etc/network/interfaces
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And &lt;strong&gt;replace&lt;/strong&gt; the contents with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;auto lo
+
+iface lo inet loopback
+iface eth0 inet dhcp
+
+iface wlan0 inet static
+address 10.0.0.1
+netmask 255.255.255.0
+broadcast 255.0.0.0
+pre-up iptables-restore &amp;lt; /etc/iptables.rules
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then, let's put a message in our www directory:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo echo &amp;quot;&amp;lt;h1&amp;gt;hello!&amp;lt;h1&amp;gt;&amp;quot; &amp;gt; /usr/share/nginx/www/index.html
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, we want to lock down our pi so that anyone who gets on the open network can't get up to any funny business:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo iptables -F
+sudo iptables -i wlan0 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p udp --dport 67:68 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -j DROP
+
+sudo sh -c &amp;quot;iptables-save &amp;gt; /etc/iptables.rules&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's set up all these services to start on startup so it will just work each time we turn it on:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo update-rc.d nginx defaults
+sudo update-rc.d hostapd defaults
+sudo update-rc.d dnsmasq defaults
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now make sure this will work on boot by turning it off and on again:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo reboot
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Testing&lt;/h2&gt;
+&lt;p&gt;If you do a Wi-Fi search on your laptop or phone you should now see "NotFreeWifi". If you connect and type in "www.blaargh.com" you should get the message we wrote out earlier.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Now if you're a normal human being you've probably just blindly pasted these commands in to your shell. If you'd like to know what you've set up, then read on!&lt;/p&gt;
+&lt;p&gt;Using &lt;strong&gt;hostapd&lt;/strong&gt; we've set up our wireless dongle to take unsecured (no passwords) connections using the SSID "NotFreeWifi". This will allow anyone with Wi-Fi on their laptop or phone or whatever to connect to the pi.&lt;/p&gt;
+&lt;p&gt;On it's own this won't do much - clients won't be able to do anything once they connect -so we've setup &lt;strong&gt;Dnsmasq&lt;/strong&gt; to give clients I.P. addresses and tell them use &lt;code&gt;10.0.0.1&lt;/code&gt; (the pi's I.P.) as a gateway.&lt;/p&gt;
+&lt;p&gt;We've also used Dnsmasq to provide a DNS server which we've (rather sneakily) set up  to give the address &lt;code&gt;10.0.0.1&lt;/code&gt; to any request. So if someone tries to visit &lt;code&gt;facebook.com&lt;/code&gt;, we tell them the address is &lt;code&gt;10.0.0.1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Finally we've set up a webserver on the pi - so when users do try and go to &lt;code&gt;facebook.com&lt;/code&gt; they actually connect to our pi - where we say hello to them.&lt;/p&gt;
+&lt;h2&gt;Results&lt;/h2&gt;
+&lt;p&gt;I've been running this on my pi for a week now and because of it's location I wasn't expecting to get any connections. Which is why I was pretty surprised to see that 5 people who weren't me have connected:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo cat /var/log/dnsmasq.log  | grep provides | awk &amp;#39;{print $9}&amp;#39; | sort | uniq
+
+android-xxxxxxxxxxxx2535
+android-xxxxxxxxxxxx2c93
+android-xxxxxxxxxxxx96cc
+Axxxxx-iphone
+BLACKBERRY-Exxx
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="honeypots"></category><category term="wi-fi"></category><category term="raspberry-pi"></category><category term="access-point"></category></entry><entry><title>The $15 (per year) Honeypot</title><link href="http://andrewmichaelsmith.com/2013/04/the-15-dollar-honeypot/" rel="alternate"></link><updated>2013-04-02T13:01:00+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2013-04-02:2013/04/the-15-dollar-honeypot/</id><summary type="html">&lt;p&gt;&lt;em&gt;Super low budget VPS servers make an ideal home for your own honeypot, this
+post takes you through setting up a feature packed honeypot on a TinyVZ VPS.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I'm always on the look out for a cheap place to a host a honeypot which is why
+I was pretty intrigued when I came accross a few companies offering $15
+ &lt;strong&gt;per year&lt;/strong&gt; virtual private servers.&lt;/p&gt;
+&lt;p&gt;This offer does seem to good to be true - and I don't plan on hosting anything
+important on my VPS - but I've been running one with &lt;a href="http://tinyvz.com"&gt;TinyVZ&lt;/a&gt;
+for 3 months now and had no problems to speak of.&lt;/p&gt;
+&lt;p&gt;So, here's a quick guide to setting up your own $15 honeypot - though please
+don't treat this as a glowing endorsement of super cheap VPSs, when I paid my
+$15 I treated it more as placing a bet than purchasing a service.&lt;/p&gt;
+&lt;p&gt;I have chosen &lt;a href="http://tinyvz.com/"&gt;TinyVZ&lt;/a&gt; as the host for this guide, you can
+almost certainly do this on other
+&lt;a href="https://www.google.com/search?q=$15%20a%20year%20vps%20host"&gt;similarly cheap hosts&lt;/a&gt;.
+Because this guide uses my
+&lt;a href="/2013/01/automatic-honeypot-setup-script/"&gt;honeypot setup script&lt;/a&gt;
+most of it revolves around navigating TinyVZ's control panel. I am not
+affiliated with TinyVZ.&lt;/p&gt;
+&lt;p&gt;TinyVZ have confirmed that they are happy for their customers to run honeypots.&lt;/p&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Server Setup (TinyVZ Specific)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sign up for a &lt;a href="http://tinyvz.com/"&gt;TinyVZ&lt;/a&gt; account (&lt;em&gt;this can take up to &lt;strong&gt;3
+days&lt;/strong&gt;&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;You will eventually receive a "New Server Information" email.&lt;/li&gt;
+&lt;li&gt;Login to the &lt;a href="https://my.ramhost.us/v2/vps/cp/"&gt;control panel&lt;/a&gt; with the details
+provided.&lt;/li&gt;
+&lt;li&gt;Click "Reload OS"&lt;/li&gt;
+&lt;li&gt;Choose &lt;strong&gt;ubuntu-12.04-x86&lt;/strong&gt; and push "Reload with selected OS"&lt;/li&gt;
+&lt;li&gt;Once that's done go back to "Main Menu"&lt;/li&gt;
+&lt;li&gt;Now copy the I.P. address of "Host Machine" and connect via SSH to this address&lt;/li&gt;
+&lt;li&gt;When prompted enter username "vz" and password "vz"&lt;/li&gt;
+&lt;li&gt;Now for "RAMCP Username" and "RAMCP Password" enter the username and password
+provided in the welcome email&lt;/li&gt;
+&lt;li&gt;You should now be logged in as root&lt;/li&gt;
+&lt;li&gt;Set a password with &lt;code&gt;passwd&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Install sudo:
+&lt;code&gt;apt-get update &amp;amp;&amp;amp; apt-get install sudo&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Install (Ubuntu)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Now run the following: &lt;code&gt;wget -q
+https://raw.github.com/andrewmichaelsmith/honeypot-setup-script/master/setup.bash
+-O /tmp/setup.bash &amp;amp;&amp;amp; bash /tmp/setup.bash&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Tada&lt;/strong&gt; - you should now have a full &lt;a href="https://code.google.com/p/kippo/"&gt;Kippo&lt;/a&gt;
+and &lt;a href="http://dionaea.carnivore.it/"&gt;Dionaea&lt;/a&gt; install. You can monitor
+&lt;code&gt;/var/kippo&lt;/code&gt; and &lt;code&gt;/var/dionaea&lt;/code&gt; for logs and binaries.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Security Considerations&lt;/strong&gt;
+The default setup you are left with on this server is iffy at best. You should
+not really be logging in as root, I would advise at the very least following
+&lt;a href="http://www.thegeekstuff.com/2011/05/openssh-options/"&gt;this guide on securing SSH&lt;/a&gt;.&lt;/p&gt;</summary><category term="honeypot"></category></entry><entry><title>Automatic Honeypot Setup Script</title><link href="http://andrewmichaelsmith.com/2013/01/automatic-honeypot-setup-script/" rel="alternate"></link><updated>2013-01-23T21:37:00+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2013-01-23:2013/01/automatic-honeypot-setup-script/</id><summary type="html">&lt;p&gt;I have just finished work on the first version of my &lt;a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/"&gt;automatic honeypot setup
+script&lt;/a&gt;. This
+script will turn a vanilla install of Ubuntu 12.04 into a fully functioning
+honeypot in under 3 minutes.&lt;/p&gt;
+&lt;p&gt;I have two main issues that I have encountered when playing around with honeypot
+software.&lt;/p&gt;
+&lt;p&gt;Firstly, you often won't find out that there are problems with your
+configuration until an attacker hits. And this can sometimes take hours.
+Nothing is more frustrating than coming back to a honeypot after a week to find
+a log file full of &lt;code&gt;Access Denied&lt;/code&gt; messages.&lt;/p&gt;
+&lt;p&gt;Secondly, honeypot software is designed with technical users in mind. Installing
+&lt;a href="http://httpd.apache.org/"&gt;Apache Web Server&lt;/a&gt; is a matter of
+&lt;code&gt;apt-get install apache2&lt;/code&gt;, it will start on system start up and come with helpful
+defaults. Whereas if you want to install &lt;a href="http://code.google.com/p/kippo/"&gt;kippo&lt;/a&gt;, you
+need to check out the subversion repository and it certainly won't set itself up
+to run on startup.&lt;/p&gt;
+&lt;p&gt;This script is my solution to these problems: &lt;a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/"&gt;https://github.com/andrewmichaelsmith/honeypot-setup-script/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Running the script will install the following services:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://dionaea.carnivore.it/"&gt;Dionaea&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://code.google.com/p/kippo/"&gt;Kippo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://lcamtuf.coredump.cx/p0f3/#/"&gt;p0f&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of these services will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;run straight out of the box with no additional configuration&lt;/li&gt;
+&lt;li&gt;start on system start up and log to &lt;code&gt;/var/log&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;have useful and secure defaults&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You will be prompted for exactly one piece of information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the network interface you want these services to run on&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This the first release and testing has been limited to Ubuntu 12.04. This script
+does all sorts of things as a super user, so please, for now, only run it on a
+clean install.&lt;/p&gt;
+&lt;p&gt;Feature requests, bug reports and pull requests are encouraged on &lt;a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/"&gt;the Github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you have any other queries, please feel free to &lt;a href="/contact"&gt;contact me&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here's a video of a 3 minute install:&lt;/p&gt;
+&lt;iframe width="420" height="315" src="http://www.youtube.com/embed/bQ8OwKf2sjA" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</summary><category term=""></category></entry><entry><title>Multiple IPs for EC2 Instances</title><link href="http://andrewmichaelsmith.com/2012/07/multiple-ips-for-ec2-honeypots/" rel="alternate"></link><updated>2012-07-19T14:14:00+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2012-07-19:2012/07/multiple-ips-for-ec2-honeypots/</id><summary type="html">&lt;p&gt;&lt;em&gt;Amazon recently announced an increase in their IP Address limits for single EC2 instances. At first glance this looks like big news for anyone who runs a honeypot on EC2. My research has found that it's not quite as good as it sounds but there are definite benefits for anyone with a little cash to spend.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Up until recently it has not been possible to have more than 1 IP Address associated with your EC2 instance*. As someone who runs a Dionaea Honeypot on EC2 I have been looking for a way to get multiple IP addresses pointed at my instance for a while now.&lt;/p&gt;
+&lt;p&gt;Which is why I was quite excited when Amazon &lt;a href="http://aws.amazon.com/about-aws/whats-new/2012/07/06/multiple-ip-addresses-for-amazon-ec2-instances-in-amazon-vpc/"&gt;announced&lt;/a&gt; that they would now support &lt;strong&gt;up to 240 IP Addresses&lt;/strong&gt; per single EC2 instance. That figure actually refers to private IPs, but in AWS land a private IP can have a public IP pointed at it. So this sounds like big news for anyone running a honeypot on an EC2 instance; more IPs means more interesting honeypot data. 240 IPs means a crap load of interesting honeypot data.&lt;/p&gt;
+&lt;p&gt;Unfortunately it's not quite as simple as that. The 240 IP limit only applies to the rather expensive High-Memory Quadruple Extra Large ($1317.60 a month) instance. Smaller instances have smaller limits. The smaller amounts are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Micro: -&lt;/li&gt;
+&lt;li&gt;Small: 8&lt;/li&gt;
+&lt;li&gt;Medium: 12&lt;/li&gt;
+&lt;li&gt;Large: 30&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/instance-types.html"&gt;source&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;As you can see that means that anyone hoping to get multiple IPs on their free tier micro instance are out of luck.&lt;/p&gt;
+&lt;p&gt;For those thinking that 30 IPs is not too bad and they may splash out on a large, there's a further limitation from Amazon. They limit EC2 users to &lt;a href="http://aws.amazon.com/contact-us/eip_limit_request/"&gt;5 IP Addresses per account&lt;/a&gt;. Fortunately, you can &lt;a href="http://aws.amazon.com/contact-us/eip_limit_request/"&gt;request an increase&lt;/a&gt;, which is exactly what I did. I found that there wasn't a need for too much detail, my e-mail looked something like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hi&lt;/p&gt;
+&lt;p&gt;I am looking to increase my IP limit, please, I need a higher amount for the security  research that I use my EC2 instances for.
+Ideally I would like 240 but will be grateful for a smaller amount if that isn't possible.&lt;/p&gt;
+&lt;p&gt;Thanks&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Amazon raised my limit to &lt;strong&gt;20 IP addresses&lt;/strong&gt;. In this day and age to IPv4 exhaustion I suppose 20 is not to be sniffed at but it could be better, maybe if I made a stronger case in the future (or had more paid instances..) I would get more but it's hard to tell.&lt;/p&gt;
+&lt;p&gt;In conclusion, Amazon's recent limit increase is only big news for big spenders. It's not possible to just grab 240 IP and point them at your free tier micro instance. If all you want is a few more IPs then it's probably more cost effective to &lt;a href="http://andrewmichaelsmith.com/2010/10/honeypot-hosting/"&gt;grab a budget VPS&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;However, if you want the flexibility of EC2 then this may be worthwile. The great thing about EC2 is the flexibility. You can grab those IPs and release them as you like. So if there was some particularly interesting vulnerability you wanted to emulate, you could quickly spin up a 20 IP instance, run it for a few days and then spin it back down. Then you could release the data publicly without any worry about compromising your honeypot's anonymity.&lt;/p&gt;
+&lt;p&gt;I intend to follow up this post with a quick step by step guide on setting up a 20 IP Dionaea honeypot.&lt;/p&gt;
+&lt;p&gt;* &lt;em&gt;I believe that strictly speaking the limit is 2 but I looked in to this once and it requires all sorts of faffing with things like load balancers which I deemed to not be worth the effort.&lt;/em&gt;&lt;/p&gt;</summary><category term="ec2 honeypot"></category></entry><entry><title>Adding Facebook and Twitter Buttons to a GWT Project</title><link href="http://andrewmichaelsmith.com/2012/06/adding-facebook-like-and-twitter-tweet-buttons-to-a-gwt-project/" rel="alternate"></link><updated>2012-06-07T14:24:00+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2012-06-07:2012/06/adding-facebook-like-and-twitter-tweet-buttons-to-a-gwt-project/</id><summary type="html">&lt;p&gt;As a new user to &lt;a href="https://developers.google.com/web-toolkit/"&gt;GWT&lt;/a&gt; I spent quite some time trying to add a Twitter
+Tweet button and Facebook Like button to a GWT project. After extensive searching I didn't find a
+useful answer.&lt;/p&gt;
+&lt;p&gt;The issue I was having was that I would include the JavaScript and
+the HTML provided by &lt;a href="https://twitter.com/about/resources/buttons"&gt;Twitter&lt;/a&gt;
+and &lt;a href="http://developers.facebook.com/docs/reference/plugins/like/"&gt;Facebook&lt;/a&gt;
+but my buttons weren't being rendered.&lt;/p&gt;
+&lt;p&gt;I had the JavaScript includes in my &lt;code&gt;index.jsp&lt;/code&gt; and had created a UIBinder &lt;code&gt;.swt.xml&lt;/code&gt; with the HTML code but when I launched my app it was just blank.&lt;/p&gt;
+&lt;p&gt;The solution was to make a call to the Twitter and Facebook JavaScript functions once the &lt;code&gt;Composite&lt;/code&gt; had loaded.&lt;/p&gt;
+&lt;p&gt;This is achieved by over-riding the &lt;code&gt;Composite&lt;/code&gt;'s &lt;code&gt;onLoad&lt;/code&gt; method and calling the rendering functions like so:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="x"&gt;@Override protected void onLoad() &lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt; showSocialButtons();&lt;/span&gt;
+&lt;span class="x"&gt; super.onLoad();&lt;/span&gt;
+&lt;span class="x"&gt;}&lt;/span&gt;
+
+&lt;span class="x"&gt;private static native String showSocialButtons() /*-&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt; &lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;wnd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;twttr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;load&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="x"&gt;; //Render twitter button&lt;/span&gt;
+&lt;span class="x"&gt; &lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;wnd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;FB&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;XFBML&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="x"&gt;;     //Render facebook button&lt;/span&gt;
+&lt;span class="x"&gt;}-*/;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And this meant that my social buttons were being rendered properly.&lt;/p&gt;</summary><category term="gwt"></category></entry><entry><title>Dionaea Honeypot on EC2 in 20 minutes</title><link href="http://andrewmichaelsmith.com/2012/03/dionaea-honeypot-on-ec2-in-20-minutes/" rel="alternate"></link><updated>2012-03-05T15:19:25+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2012-03-05:2012/03/dionaea-honeypot-on-ec2-in-20-minutes/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Dionaea&lt;/li&gt;
+&lt;li&gt;Ubuntu&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is a tutorial on setting up Dionaea on an EC2 instance. Amazon currently off a &lt;a href="http://aws.amazon.com/free/"&gt;free EC2 Micro Instance&lt;/a&gt; so you should be able to do this too without any cost.&lt;/p&gt;
+&lt;h2&gt;Pre-requisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://aws.amazon.com/"&gt;Amazon AWS&lt;/a&gt; account&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;EC2 Server Set up for Dionaea&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Sign in to your Amazon AWS console, choose the &lt;strong&gt;EC2 &lt;/strong&gt;tab and choose a &lt;strong&gt;Region&lt;/strong&gt; (I have chosen 'Ascia Pacific (Singapore)')
+&lt;a href="/images/2012/03/1.png"&gt;&lt;img alt="" src="/images/2012/03/1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Push &lt;strong&gt;Launch Instance &lt;/strong&gt;and choose &lt;strong&gt;Classic Wizard &lt;/strong&gt;and push &lt;strong&gt;Continue&lt;/strong&gt;
+&lt;a href="/images/2012/03/2.png"&gt;&lt;img alt="" src="/images/2012/03/2.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click on the &lt;strong&gt;Community AMIs&lt;/strong&gt; tab. Here you need a AMI for Ubuntu 10.04, these vary between AWS Regions. A list of AMIs is available &lt;a href="http://cloud-images.ubuntu.com/releases/10.04/release/"&gt;here&lt;/a&gt;. Pick an AMI with root store 'ebs' and arch '32-bit'.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For Asia Pacific use the AMI &lt;strong&gt;ami-7289cd20 &lt;/strong&gt;(Pick an AMI with root store 'ebs' and arch 32-bit), then push &lt;strong&gt;Select&lt;/strong&gt;**
+&lt;a href="/images/2012/03/3.png"&gt;&lt;img alt="" src="/images/2012/03/3.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Make sure to change the &lt;strong&gt;Instance Type&lt;/strong&gt; to &lt;strong&gt;Micro&lt;/strong&gt; (from Small), otherwise you will be charged, and push &lt;strong&gt;Continue&lt;/strong&gt;
+&lt;a href="/images/2012/03/4.png"&gt;&lt;img alt="" src="/images/2012/03/4.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Continue&lt;/strong&gt; until you are prompted to &lt;strong&gt;Create a Key Pair&lt;/strong&gt;, choose a name and &lt;strong&gt;Create and Download Your Key Pair&lt;/strong&gt; (save this file somewhere safe for later), push &lt;strong&gt;Continue&lt;/strong&gt;
+.&lt;a href="/images/2012/03/5.png"&gt;&lt;img alt="" src="/images/2012/03/5.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Choose to &lt;strong&gt;Create a New Security Group&lt;/strong&gt;, for &lt;strong&gt;Create a new rule&lt;/strong&gt; choose &lt;strong&gt;All TCP&lt;/strong&gt; and &lt;strong&gt;Source&lt;/strong&gt; choose &lt;strong&gt;0.0.0.0/0&lt;/strong&gt;. Enter whatever you like in Name/Description. Push &lt;strong&gt;Add Rule&lt;/strong&gt;
+&lt;a href="/images/2012/03/6.png"&gt;&lt;img alt="" src="/images/2012/03/6.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Push &lt;strong&gt;Continue&lt;/strong&gt; and then &lt;strong&gt;Launch&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Your server has now been set up and will shortly launch. Note that you have allowed TCP access to all services on this machine so do not install anything that could be compromised. It's possible to tighten up that security but it's a little more complicated - perhaps a subject for a later blog post.&lt;/p&gt;
+&lt;h2&gt;Setting up Dionaea on your EC2 Server&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Find the address of your server by selecting it and choosing &lt;strong&gt;Instance Actions&lt;/strong&gt; &amp;gt; &lt;strong&gt;Connect&lt;/strong&gt;. Follow the instruction to connect to your server using the key you generated and downloaded earlier. &lt;em&gt;Putty users may need to &lt;a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html"&gt;use &lt;/a&gt;&lt;a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html"&gt;puttygen&lt;/a&gt; to convert their key.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you're connected you can have Dionaea up and running in minutes by following this tutorial: &lt;a href="/2012/02/quick-install-of-dionaea-on-ubuntu/"&gt;/2012/02/quick-install-of-dionaea-on-ubuntu/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</summary><category term=""></category></entry><entry><title>Quick install of Dionaea on Ubuntu</title><link href="http://andrewmichaelsmith.com/2012/02/quick-install-of-dionaea-on-ubuntu/" rel="alternate"></link><updated>2012-02-27T08:29:32+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2012-02-27:2012/02/quick-install-of-dionaea-on-ubuntu/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Dionaea&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Updated 05/03/2012: &lt;/strong&gt;Improved instructions based upon &lt;a href="http://blog.dinotools.de/2011/08/18/dionaea-howto-install-dionaea-using-a-ppa"&gt;another guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://dionaea.carnivore.it/#compiling"&gt;Dionaea&lt;/a&gt; is a great honeypot but I have found that getting it up and running is not exactly the quickest process in the world.&lt;/p&gt;
+&lt;p&gt;However, it seems that the&lt;a href="http://www.honeynet.org/"&gt; honeynet project&lt;/a&gt; have started maintaining &lt;a href="https://launchpad.net/~honeynet"&gt;Ubuntu packages&lt;/a&gt; for Dionaea, which makes the install process a lot more simple. The following is how I got it up and running.&lt;/p&gt;
+&lt;h2&gt;Install Dionaea on Ubuntu Natty Narwhal (11.04)&lt;/h2&gt;
+&lt;p&gt;First set up the repository and install dionaea:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo add-apt-repository ppa:honeynet/nightly
+sudo apt-get update
+sudo apt-get install dionaea
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, a little directory  set up:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo mkdir -p /var/dionaea/wwwroot
+sudo mkdir -p /var/dionaea/binaries
+sudo mkdir -p /var/dionaea/log
+sudo chown -R nobody:nogroup /var/dionaea/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we update our config file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo mv /etc/dionaea/dionaea.conf.dist /etc/dionaea/dionaea.conf
+sudo sed -i &amp;#39;s/var\/dionaea\///g&amp;#39; /etc/dionaea/dionaea.conf
+sudo sed -i &amp;#39;s/log\//\/var\/dionaea\/log\//g&amp;#39; /etc/dionaea/dionaea.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, launch dionaea:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo dionaea -c /etc/dionaea/dionaea.conf -w /var/dionaea -u nobody -g nogroup -D
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And there you have it! As simple as that. I should note that this will get you up and running quickly but is not necessarily the most secure way to run Dionaea.&lt;/p&gt;
+&lt;p&gt;This makes it really easy for anyone interested in Dionaea to get it up and running - even Windows users can grab &lt;a href="https://www.virtualbox.org/"&gt;Virtualbox&lt;/a&gt; and an &lt;a href="http://virtualboxes.org/images/ubuntu/"&gt;Ubuntu Image&lt;/a&gt; and be up and running in no time.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>kippo-graph is neat but calls home</title><link href="http://andrewmichaelsmith.com/2011/12/kippo-graph-is-neat-but-calls-home/" rel="alternate"></link><updated>2011-12-26T18:51:28+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2011-12-26:2011/12/kippo-graph-is-neat-but-calls-home/</id><summary type="html">&lt;p&gt;&lt;strong&gt;Update: &lt;/strong&gt;The author has since released an updated version with the update check (calling home) turned off by default: &lt;a href="http://bruteforce.gr/kippo-graph"&gt;http://bruteforce.gr/kippo-graph&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I've just been playing around with &lt;a href="http://bruteforce.gr/kippo-graph"&gt;kippo-graph&lt;/a&gt;, I like it, it's quick and easy to set up and provides features I've wanted for a while. The only thing I don't like about it is the 'version checker' which calls home to make sure it's up to date.&lt;/p&gt;
+&lt;p&gt;I'm sure the author's intentions are completely innocent but personally I like to keep the I.P. addresses of my honeypots private. To stop kippo-graph from calling home, simply open &lt;code&gt;include/misc/versionCheck.php&lt;/code&gt; and replace the contents with the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class="c1"&gt;// this is the version of the deployed script&lt;/span&gt;
+&lt;span class="nb"&gt;define&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;VERSION&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;0.5&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;isUpToDate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cp"&gt;?&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>List interesting Kippo TTY Logs by Date</title><link href="http://andrewmichaelsmith.com/2011/01/list-interesting-kippo-tty-logs-by-date/" rel="alternate"></link><updated>2011-01-24T12:35:09+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2011-01-24:2011/01/list-interesting-kippo-tty-logs-by-date/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;li&gt;Kippo&lt;/li&gt;
+&lt;li&gt;Scripts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A quick one, mostly a reference. It seems those .log files that are 87 bytes tend to be connections followed swiftly by disconnects.
+&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ls -alFhL ~/kippo/log/tty | grep -v 87&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Then we can skim through our list&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;python ~/kippo/utils/playlog.py ~/kippo/log/tty/20110124-x-x.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;What I would love for Kippo is some form of online tool to allow you to 'work through' an annotate the (wonderful) tty logs.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Picking out the interesting Malware from Dionaea</title><link href="http://andrewmichaelsmith.com/2011/01/picking-out-the-interesting-malware-from-dionaea/" rel="alternate"></link><updated>2011-01-13T13:18:37+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2011-01-13:2011/01/picking-out-the-interesting-malware-from-dionaea/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Dionaea&lt;/li&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;li&gt;Scripts&lt;/li&gt;
+&lt;li&gt;Virustotal&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So once you have Dionaea up and running and scanning with Virustotal you want to pick out the more interesting malware from your ever expanding collection.&lt;/p&gt;
+&lt;p&gt;I am choosing to define 'interesting' here as 'the least positive hits on virustotal.com', there are a number of reasons why this may very well not mean 'interesting' but I don't need to go in to those here. It is, at least, interesting enough.&lt;/p&gt;
+&lt;p&gt;We're going to use the sqlite database to poke around, there's already been some SQL magic documented on &lt;a href="http://carnivore.it/2010/10/07/virustotal_api"&gt;carnivore.it&lt;/a&gt; that you should check out if this interests you.&lt;/p&gt;
+&lt;h3&gt;Top 10 Undected Malware&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;SELECT
+    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink
+FROM
+    virustotalscans, virustotals
+WHERE
+    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &amp;#39;&amp;#39;
+GROUP BY
+    virustotalscans.virustotal
+ORDER BY
+    hits asc;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This produces a nice little list, which for me is:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=15108894b48a088b525fc888562ccab612d213a77f7cbe2d2fe369b357e76caf-1294703586"&gt;18798b6904059c9408888fa05da02fe0&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=9ac43132f686480585b424eced49aa4fd81408cc17b78151fbb6ddf3a673e0b0-1294618143"&gt;0e19ae7fb3f3c70f81e321d4b2824d48&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=fe102a26eca4a3c0f30ac8244cf8d8b918922f39a9ee4e280657f07740a2e8d6-1294781657"&gt;022c02f4104a157fb8c04ec11f4b3ce3&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=cec0cef017b9f635dde1c7eeb202cdbb94eedbe9149be6d79609ca65b88c209c-1294628795"&gt;061a289056139e77388ad93bbab42d07&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=bbf39cce365ebc693595bb12519135f2712a9fd33a91635c942c15d1971f0b91-1294493585"&gt;3773d1e9d976659d1e18f390cec6d85a&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=700733a641f37469ef6bef8c661e20b10bbb3970dd6b05786f036fd6fdf16597-1294894604"&gt;524305279349c3e0ce187384fe87ca13&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=cc9b431b9d386b4224bacf6ac3dab9891633df7d84727447c38ce6196e4f1c01-1294629031"&gt;6170cd45f1e0cd5d22c7a80d3b4d23f7&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=d25dcf67c7c41ef92bdc4c27bad761c8bfeb3473d9d275d08dfad089da0c217e-1294848031"&gt;77296904b96d0905960a5ff23e5935db&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=2701edf555dd17b58d8b454719c7d0c54b096e2dc1e862256df1d0495b197e1d-1294713960"&gt;4535c1f0ac6749a3c452a9bd4b3df655&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.virustotal.com/file-scan/report.html?id=c17160a635aa7d3827c3ba4109e92c386fba246c77cd742c415c8e6dbae50328-1294831583"&gt;2894c4e7df8fc9eb7d87a22255def354&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Obviously it's entirely possible that 1 year ago Dionaea submitted a piece of malware that is since detected by all of scanners, but it's still quite a handy list when picking through lots of files.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Similarly, if you want to see the most obscure viruses in the past 7 days, only a little tweak is required:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;SELECT
+    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink
+FROM
+    virustotalscans, virustotals
+WHERE
+    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &amp;#39;&amp;#39; and virustotals.virustotal_timestamp &amp;gt;= strftime(&amp;#39;%s&amp;#39;,&amp;#39;now&amp;#39;,&amp;#39;-7 days&amp;#39;)
+GROUP BY
+    virustotalscans.virustotal
+ORDER BY
+    hits asc;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term=""></category></entry><entry><title>Getting Dionaea to scan previously collected Malware</title><link href="http://andrewmichaelsmith.com/2011/01/getting-dionaea-to-scan-previously-collected-malware/" rel="alternate"></link><updated>2011-01-10T14:52:39+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2011-01-10:2011/01/getting-dionaea-to-scan-previously-collected-malware/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Dionaea&lt;/li&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;li&gt;Virustotal
+tags:&lt;/li&gt;
+&lt;li&gt;virustotal dionaea&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; This is in old post and the scripts got lost when I moved hosts. There is a script here: &lt;a href="http://carnivore.it/2010/10/07/virustotal_api"&gt;http://carnivore.it/2010/10/07/virustotal_api&lt;/a&gt; under "processing backlog" that will do what I describe below.&lt;/p&gt;
+&lt;p&gt;I finally got around to signing up for a &lt;a href="http://www.virustotal.com/advanced.html#publicapi"&gt;Virustotal API key&lt;/a&gt; and popping it in to my &lt;a href="http://dionaea.carnivore.it/"&gt;Dionaea&lt;/a&gt; configuration. This gave my logs a lot more information for the new malware that was collected. My problem was that all my previous files had no Virustotal scan information attached.&lt;/p&gt;
+&lt;p&gt;This would not do, so I wrote a Python script to populate the 'vtcache.sqlite' database with all the previous, unscanned pieces of malware. This will cause dionaea to scan all of the old malware with Virustotal and update the dionaea database with all that tasty data.&lt;/p&gt;
+&lt;p&gt;Most of the magic here is the work of dionaea, all my script does is copy some data from one table to another. You must have the old malware still and the script is written for a setup, like mine, where most of the logs and malware is just left at default.&lt;/p&gt;
+&lt;p&gt;The script is set up with dionaea defaults for directories, if yours are different you will need to change them by editing the file.&lt;/p&gt;
+&lt;p&gt;Once configured, simply run:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;python vupdate.py&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;No output is good output. That's all! Any feedback is appreciated, this is definitely experimental so backup anything important before you run it.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Announcing Bluepot: a Bluetooth Honeypot</title><link href="http://andrewmichaelsmith.com/2010/12/bluepot-bluetooth-honeypot/" rel="alternate"></link><updated>2010-12-30T05:01:55+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-12-30:2010/12/bluepot-bluetooth-honeypot/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Bluetooth&lt;/li&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I have finally got around to putting my Bluetooth Honeypot 'Bluepot' online and it is available (source and binaries) here: &lt;a href="http://code.google.com/p/bluepot/"&gt;http://code.google.com/p/bluepot/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Bluepot is a Bluetooth Honeypot created for a third year university project that attempts to mirror the functionality of internet based honeypots such as Dionaea but in the world of Bluetooth. It is written in Java and being released under the GNU General Public License v3.&lt;/p&gt;
+&lt;p&gt;It is very much still a work in process but has a good deal of functionality, including a graphical user interface, support for multiple Bluetooth devices, ability to 'fake' device type and support for multiple vulnerabilities. The main support for malware collection is support for the OBEX Push protocol, enabling a computer to automatically download all files sent to it whilst under the guise of a smart phone or printer.&lt;/p&gt;
+&lt;p&gt;Bluepot looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://bluepot.googlecode.com/svn-history/r191/wiki/images/bluepot-main-smaller.png"&gt;&lt;img alt="" src="http://bluepot.googlecode.com/svn-history/r191/wiki/images/bluepot-main-smaller.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Bluepot currently only runs on Linux, mainly because Windows only supports one Bluetooth device and support for multiple Bluetooth dervices was considered to be a major feature of the project. Adding Windows support should be relatively trivial and is a definite possibility for future development.&lt;/p&gt;
+&lt;p&gt;Looking back at Bluepot, 7 months after completing development,there are a number of changes I would like to make and features I would like to add. The code isn't perfect but isn't that awful either, all constructive criticism is welcomed.&lt;/p&gt;
+&lt;p&gt;More about Bluepot: &lt;a href="http://code.google.com/p/bluepot/"&gt;http://code.google.com/p/bluepot/&lt;/a&gt;&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Kippo Customisations</title><link href="http://andrewmichaelsmith.com/2010/11/kippo-customisations/" rel="alternate"></link><updated>2010-11-18T13:09:28+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-11-18:2010/11/kippo-customisations/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;li&gt;SSH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having ran Kippo for a while now I am beginning to suspect that people are recognising the Kippo install and moving on. This isn't too difficult as there are some fairly static  pieces of data that Kippo will provide you with should you request them. Fortunately it's very easy to change these as we see fit, so we will!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NOTE: Don't &lt;em&gt;just&lt;/em&gt; do this.&lt;/strong&gt; This is not exactly best security practice. I personally am using information about a computer that is not running Kippo and putting it on to a different server. If you just run the below commands on a computer running Kippo then an attacker is going to know all sorts of information about your computer that may give them the upper hand in an actual attack. At the very list edit the &lt;strong&gt;passwd&lt;/strong&gt; file to replace usernames.&lt;/p&gt;
+&lt;p&gt;The following commands are to illustrate what I have done. Copying and pasting may not be the best of ideas.&lt;/p&gt;
+&lt;p&gt;Update &lt;strong&gt;honeyfs&lt;/strong&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat /proc/cpuinfo &amp;gt; kippo/honeyfs/proc/cpuinfo
+cat /etc/issue &amp;gt; kippo/honeyfs/etc/issue
+cat /etc/passwd &amp;gt; kippo/honeyfs/etc/passwd
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;Update &lt;strong&gt;txtcmds&lt;/strong&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;dmesg &amp;gt; kippo/txtcmds/bin/dmesg
+mount &amp;gt; kippo/txtcmds/bin/mount
+#&lt;span class="nt"&gt;&amp;lt;em&amp;gt;&amp;lt;strong&amp;gt;&lt;/span&gt;definitely&lt;span class="nt"&gt;&amp;lt;/strong&amp;gt;&lt;/span&gt; change the I.P. addresses within this file
+&lt;span class="nt"&gt;&amp;lt;/em&amp;gt;&lt;/span&gt;ifconfig &amp;gt; kippo/txtcmds/sbin/ifconfig
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;Next up I am going to add some more &lt;strong&gt;'programs'&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;php -v &amp;gt; kippo/txtcmds/bin/
+python --version &amp;gt; kippo/txtcmds/bin/python
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;Arguably these two may alert the attacker as they will be expecting to be able to type php and python rather than just get the version output but my hope is that it will fool them in to thinking that they are installed and encourage them to &lt;em&gt;wget&lt;/em&gt; some of their tools.&lt;/p&gt;
+&lt;p&gt;So now hopefully our honeypot will look more legitimate to the attacker, or at least one that has gotten used to stock Kippo installs. Only time will tell!&lt;/p&gt;
+&lt;blockquote&gt;&lt;/blockquote&gt;</summary><category term=""></category></entry><entry><title>Running GlastopfNG</title><link href="http://andrewmichaelsmith.com/2010/11/running-glastopfng/" rel="alternate"></link><updated>2010-11-17T15:19:47+00:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-11-17:2010/11/running-glastopfng/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;li&gt;Web&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I decided to try out &lt;a href="http://glastopf.org/"&gt;GlastopfNG&lt;/a&gt; recently, I don't know too much about it other than that it is a web application honeypot and the successor to Glastopf. I decided that the best way to learn about it would be to try it out.&lt;/p&gt;
+&lt;p&gt;This was on a Ubuntu 10.04 LTS. At first I set out to compile from source but as the binaries are provided and compiling from source turned out to be a little tricky I took the easier option.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;wget http://dev.glastopf.org/attachments/17/GlastopfNG.zip
+unzip GlastopfNG.zip
+cd GlastopfNG/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;As this is not the latest version there is a &lt;a href="http://dev.glastopf.org/issues/155"&gt;NullPointerException bug&lt;/a&gt; in this binary, we have to move a .log file to fix this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mv ./modules/report/cleanLog/cleanLog.log ./modules/report/cleanLogXXX.log
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;(This needs to be run each time before you start GlastopfNG)&lt;/p&gt;
+&lt;p&gt;Then we can start!&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;java -jar GlastopfNG.jar
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;Now to experiment, results to follow!&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Honeypot Hosting</title><link href="http://andrewmichaelsmith.com/2010/10/honeypot-hosting/" rel="alternate"></link><updated>2010-10-18T12:02:09+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-10-18:2010/10/honeypot-hosting/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;Honeypots&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As I am just a honeypot hobbyist and not affiliated with any university or the security department of any organisation I have to host my honeypots myself.&lt;/p&gt;
+&lt;p&gt;Currently I rent a VPS to do this, a low spec server with two IP addresses. This is perfectly acceptable for my needs (after all, this is just a hobby) but with my lease expiring soon I decided to hunt for the perfect "honeypot host".&lt;/p&gt;
+&lt;p&gt;There's little information on the internet regarding honeypot hosting and posts I have made in the past on forums have turned up nothing so I decided to contact the hosts directly.&lt;/p&gt;
+&lt;h2&gt;&lt;strong&gt;Results&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;I contacted just over ten ISPs, specifically those that specialise in VPS hosting (because I'm cheap), here is what I asked them and what they said:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q: Can I run a honeypot on your servers?&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A&lt;/strong&gt;&lt;em&gt; (best)&lt;/em&gt;**: Yes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;em&gt;*A &lt;/em&gt;*&lt;em&gt;(worst)&lt;/em&gt;&lt;/strong&gt;: No**&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I didn't ask this question directly although it was discussed in the content of my email, to explain my IP address greed. I was surprised to find many hosts completely unwelcoming to the idea of having a honeypot on their servers. One response from those that weren't interested was that running one would &lt;em&gt;"put a target on everyone within the core infrastructure of that facility"&lt;/em&gt; and this was not uncommon. Attempts to to explain that I wasn't exactly planning on sticking an unpatched Windows XP install on their systems were met with deaf ears.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q: How many IP addresses can I get?&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A &lt;/strong&gt;&lt;em&gt;(most)&lt;/em&gt;**: 5&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;&lt;em&gt;(least)&lt;/em&gt;&lt;/strong&gt;: 0**&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Obviously quite important for the purposes of running a honeypot, this was the main piece of information I was after. Unfortunately, the maximum offer I received was 8 (with 5 usable). Further enquiries led me to find that &lt;a href="http://www.ripe.net/"&gt;RIPE&lt;/a&gt; are (understandably) quite particular about what they give IP addresses out for and who to, after allocating a block to an ISP they will perform an audit and if the ISP aren't using the addresses as RIPE see fit they won't give them any more. I contacted RIPE about this, they weren't particularly informative and mostly eager to get me to sign up as a member.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q: Can you guarantee a good dispersion of the addresses?&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A &lt;/strong&gt;&lt;em&gt;(best)&lt;/em&gt;&lt;strong&gt;: Probably not&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A &lt;/strong&gt;&lt;em&gt;(worst)&lt;/em&gt;&lt;strong&gt;: No&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Generally the answer was that this was not possible as ISPs dish out IPs as they get them and also we generally themselves allocated in blocks. Either way, there was no way for any host contacted to guarantee such a service.&lt;/p&gt;
+&lt;h2&gt;&lt;strong&gt;The Hosts&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Those hosts the responded and were happy to host honeypots are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.slicehost.com/"&gt;Slicehost &lt;/a&gt; - $2 per IP, Max. 5 IPs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.solarvps.com/"&gt;&lt;strong&gt;SolarVPS&lt;/strong&gt;&lt;/a&gt; - No extra IPs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.tagadab.com/"&gt;Tagadab&lt;/a&gt; - No charge, Max 5 IPs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.vpsland.com/"&gt;VPSLand&lt;/a&gt; - $2 per IP, Max 5 IPs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;All in all, fairly disappointing results, possibly hardly worth the blog post, except in the vain hope that I've missed some super host that can offer me all I need. This is by no means an extensive study but the responses are fairly bleak for those of us with limited resources, regardless, I hope this may save someone the time I expended.&lt;/p&gt;
+&lt;h2&gt;Follow Up - 3 months on&lt;/h2&gt;
+&lt;p&gt;This is a quick note I'm adding to the bottom of this article for anyone who finds it and wants to know what I did. I went with &lt;a href="http://www.tagadab.com/"&gt;tagadab&lt;/a&gt; in the end, as they had the best value and the most IPs on offer. Furthermore their support not only knew what a honeypot was but were welcoming towards the idea of hosting them. I got 5 IPs, they were unvaried (as I had been warned) and basically x.x.x.x, x.x.x.x+1, .. , x.x.x.x+4.&lt;/p&gt;
+&lt;p&gt;The experience has been fine, the server stable and speedy and no bother for hosting honeypots. Exactly what I wanted.&lt;/p&gt;
+&lt;p&gt;For those in the position I was 3 months ago I would give a piece of advice that I would like to have tried. From the get go I chose '5 IPs', the maximum, I realised that perhaps my impatience caused me to miss a trick. What I should have done is request 1 IP, then a week later another, then a week later another and so on until I had hit my maximum. This would have almost certainly resulted in a more varied selection of IPs.&lt;/p&gt;
+&lt;p&gt;If you try this let me know how it works!&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Extra logins for Kippo</title><link href="http://andrewmichaelsmith.com/2010/07/extra-logins-for-kippo/" rel="alternate"></link><updated>2010-07-11T09:18:13+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-07-11:2010/07/extra-logins-for-kippo/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;SSH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having run &lt;a href="http://code.google.com/p/kippo/"&gt;Kippo&lt;/a&gt; for a few days now I am yet to get a successful login. 931 failed login attempts so far. This is due to the fact that by default Kippo only accepts two combinations of username and password: root and 123456. This can be easily altered by editing Kippo.tac. So it made sense to use the usernames and passwords that had been tried against my honeypot an feed them back in.&lt;/p&gt;
+&lt;p&gt;I did this using this, probably unnecessarily complex, bit of shell script:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;cat log/kippo.log | grep attempt | awk '{ print $9 }' | sed -e 's/[//'g | sed -e 's/]//'g | sed -e 's///'', '/g | awk ' { print "(x27"$0"x27)," } ' | uniq&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This produces a nice long list of 921 usernames and passwords that can then be pasted in to the Kippo configuration file. It's now up and running so hopefully I will get a few more bites.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Kippo is Cool</title><link href="http://andrewmichaelsmith.com/2010/07/kippo-is-cool/" rel="alternate"></link><updated>2010-07-08T04:31:14+01:00</updated><author><name>Andrew Smith</name></author><id>tag:andrewmichaelsmith.com,2010-07-08:2010/07/kippo-is-cool/</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;SSH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="http://code.google.com/p/kippo/"&gt;Kippo&lt;/a&gt; is an incredibly easy to set up SSH Honeypot. The only trouble I had was that it (quite rightly) won't run as root so you can't run it directly on port 22. This is solved by IPTables:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;iptables -t nat -A PREROUTING -i eth0 -p tcp –dport 22 -j REDIRECT –to-port 2222&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Command from another &lt;a href="http://blog.infosanity.co.uk/2010/07/06/starting-with-kippo/#comment-485"&gt;Kippo blog post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Results to follow!&lt;/p&gt;</summary><category term=""></category></entry></feed>

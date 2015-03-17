@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Andy Smith's Blog - ec2 honeypot</title>
+  <meta name="author" content="Andrew Smith">
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="../favicon.png" rel="icon">
+  <link href="../theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="../theme/js/modernizr-2.0.js"></script>
+  <script src="../theme/js/ender.js"></script>
+  <script src="../theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="../">Andy Smith's Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+
+<ul class="main-navigation">
+      <li><a href="../pages/bluepot.html">bluepot</a></li>
+      <li><a href="../pages/chump.html">chump</a></li>
+      <li><a href="../pages/contact.html">Contact</a></li>
+    <li >
+    <a href="../category/blog.html">Blog</a>
+    </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2012/07/multiple-ips-for-ec2-honeypots/">Multiple IPs for EC2 Instances</a>
+      </h1>
+      <p class="meta"><time datetime="2012-07-19T14:14:00+01:00" pubdate>Thu 19 July 2012</time></p>
+</header>
+
+  <div class="entry-content"><p><em>Amazon recently announced an increase in their IP Address limits for single EC2 instances. At first glance this looks like big news for anyone who runs a honeypot on EC2. My research has found that it's not quite as good as it sounds but there are definite benefits for anyone with a little cash to spend.</em></p>
+<p>Up until recently it has not been possible to have more than 1 IP Address associated with your EC2 instance*. As someone who runs a Dionaea Honeypot on EC2 I have been looking for a way to get multiple IP addresses pointed at my instance for a while now.</p>
+<p>Which is why I was quite excited when Amazon <a href="http://aws.amazon.com/about-aws/whats-new/2012/07/06/multiple-ip-addresses-for-amazon-ec2-instances-in-amazon-vpc/">announced</a> that they would now support <strong>up to 240 IP Addresses</strong> per single EC2 instance. That figure actually refers to private IPs, but in AWS land a private IP can have a public IP pointed at it. So this sounds like big news for anyone running a honeypot on an EC2 instance; more IPs means more interesting honeypot data. 240 IPs means a crap load of interesting honeypot data.</p>
+<p>Unfortunately it's not quite as simple as that. The 240 IP limit only applies to the rather expensive High-Memory Quadruple Extra Large ($1317.60 a month) instance. Smaller instances have smaller limits. The smaller amounts are as follows:</p>
+<ul>
+<li>Micro: -</li>
+<li>Small: 8</li>
+<li>Medium: 12</li>
+<li>Large: 30</li>
+</ul>
+<p><a href="http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/instance-types.html">source</a></p>
+<p>As you can see that means that anyone hoping to get multiple IPs on their free tier micro instance are out of luck.</p>
+<p>For those thinking that 30 IPs is not too bad and they may splash out on a large, there's a further limitation from Amazon. They limit EC2 users to <a href="http://aws.amazon.com/contact-us/eip_limit_request/">5 IP Addresses per account</a>. Fortunately, you can <a href="http://aws.amazon.com/contact-us/eip_limit_request/">request an increase</a>, which is exactly what I did. I found that there wasn't a need for too much detail, my e-mail looked something like this:</p>
+<blockquote>
+<p>Hi</p>
+<p>I am looking to increase my IP limit, please, I need a higher amount for the security  research that I use my EC2 instances for.
+Ideally I would like 240 but will be grateful for a smaller amount if that isn't possible.</p>
+<p>Thanks</p>
+</blockquote>
+<p>Amazon raised my limit to <strong>20 IP addresses</strong>. In this day and age to IPv4 exhaustion I suppose 20 is not to be sniffed at but it could be better, maybe if I made a stronger case in the future (or had more paid instances..) I would get more but it's hard to tell.</p>
+<p>In conclusion, Amazon's recent limit increase is only big news for big spenders. It's not possible to just grab 240 IP and point them at your free tier micro instance. If all you want is a few more IPs then it's probably more cost effective to <a href="http://andrewmichaelsmith.com/2010/10/honeypot-hosting/">grab a budget VPS</a>.</p>
+<p>However, if you want the flexibility of EC2 then this may be worthwile. The great thing about EC2 is the flexibility. You can grab those IPs and release them as you like. So if there was some particularly interesting vulnerability you wanted to emulate, you could quickly spin up a 20 IP instance, run it for a few days and then spin it back down. Then you could release the data publicly without any worry about compromising your honeypot's anonymity.</p>
+<p>I intend to follow up this post with a quick step by step guide on setting up a 20 IP Dionaea honeypot.</p>
+<p>* <em>I believe that strictly speaking the limit is 2 but I looked in to this once and it requires all sorts of faffing with things like load balancers which I deemed to not be worth the effort.</em></p></div>
+  <footer>
+    <a rel="full-article" href="../2012/07/multiple-ips-for-ec2-honeypots/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="../2012/07/multiple-ips-for-ec2-honeypots/">Multiple IPs for EC2 Instances</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="../category/blog.html">Blog</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="../tag/.html"></a>,    <a href="../tag/raspberry-pi.html">raspberry-pi</a>,    <a href="../tag/dionaea.html">dionaea</a>,    <a href="../tag/honeypots.html">honeypots</a>,    <a href="../tag/volume.html">volume</a>,    <a href="../tag/gwt.html">gwt</a>,    <a href="../tag/kippo.html">kippo</a>,    <a href="../tag/mitm.html">mitm</a>,    <a href="../tag/ssh.html">ssh</a>,    <a href="../tag/ec2-honeypot.html">ec2 honeypot</a>,    <a href="../tag/docker.html">docker</a>,    <a href="../tag/wi-fi.html">wi-fi</a>,    <a href="../tag/honeypot.html">honeypot</a>,    <a href="../tag/access-point.html">access-point</a>  </section>
+
+
+
+  <section>
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+      <li class="loading">Status updating...</li>
+    </ul>
+    <script type="text/javascript">
+      $.domReady(function(){
+          if (!window.jXHR){
+              var jxhr = document.createElement('script');
+              jxhr.type = 'text/javascript';
+              jxhr.src = '../theme/js/jXHR.js';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(jxhr, s);
+          }
+
+          github.showRepos({
+              user: 'andrewmichaelsmith',
+              count: 5,
+              skip_forks: false,
+              target: '#gh_repos'
+          });
+      });
+    </script>
+    <script src="../theme/js/github.js" type="text/javascript"> </script>
+  </section>
+
+
+<section>
+    <p>Follow <a href="http://twitter.com/bingleybeep">@bingleybeep</a></p>
+</section>
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Smith -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33475321-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2');
+    ga('send', 'pageview');
+</script>
+	<script type="text/javascript">
+	  var disqus_shortname = 'ams-blog';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

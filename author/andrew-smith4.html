@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Andy Smith's Blog - Articles by Andrew Smith</title>
+  <meta name="author" content="Andrew Smith">
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="../favicon.png" rel="icon">
+  <link href="../theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="../theme/js/modernizr-2.0.js"></script>
+  <script src="../theme/js/ender.js"></script>
+  <script src="../theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="../">Andy Smith's Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+
+<ul class="main-navigation">
+      <li><a href="../pages/bluepot.html">bluepot</a></li>
+      <li><a href="../pages/chump.html">chump</a></li>
+      <li><a href="../pages/contact.html">Contact</a></li>
+    <li >
+    <a href="../category/blog.html">Blog</a>
+    </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2011/01/picking-out-the-interesting-malware-from-dionaea/">Picking out the interesting Malware from Dionaea</a>
+      </h1>
+      <p class="meta"><time datetime="2011-01-13T13:18:37+00:00" pubdate>Thu 13 January 2011</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Dionaea</li>
+<li>Honeypots</li>
+<li>Scripts</li>
+<li>Virustotal</li>
+</ul>
+<p>So once you have Dionaea up and running and scanning with Virustotal you want to pick out the more interesting malware from your ever expanding collection.</p>
+<p>I am choosing to define 'interesting' here as 'the least positive hits on virustotal.com', there are a number of reasons why this may very well not mean 'interesting' but I don't need to go in to those here. It is, at least, interesting enough.</p>
+<p>We're going to use the sqlite database to poke around, there's already been some SQL magic documented on <a href="http://carnivore.it/2010/10/07/virustotal_api">carnivore.it</a> that you should check out if this interests you.</p>
+<h3>Top 10 Undected Malware</h3>
+<div class="highlight"><pre>SELECT
+    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink
+FROM
+    virustotalscans, virustotals
+WHERE
+    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &#39;&#39;
+GROUP BY
+    virustotalscans.virustotal
+ORDER BY
+    hits asc;
+</pre></div>
+
+
+<p>This produces a nice little list, which for me is:</p>
+<ol>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=15108894b48a088b525fc888562ccab612d213a77f7cbe2d2fe369b357e76caf-1294703586">18798b6904059c9408888fa05da02fe0</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=9ac43132f686480585b424eced49aa4fd81408cc17b78151fbb6ddf3a673e0b0-1294618143">0e19ae7fb3f3c70f81e321d4b2824d48</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=fe102a26eca4a3c0f30ac8244cf8d8b918922f39a9ee4e280657f07740a2e8d6-1294781657">022c02f4104a157fb8c04ec11f4b3ce3</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=cec0cef017b9f635dde1c7eeb202cdbb94eedbe9149be6d79609ca65b88c209c-1294628795">061a289056139e77388ad93bbab42d07</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=bbf39cce365ebc693595bb12519135f2712a9fd33a91635c942c15d1971f0b91-1294493585">3773d1e9d976659d1e18f390cec6d85a</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=700733a641f37469ef6bef8c661e20b10bbb3970dd6b05786f036fd6fdf16597-1294894604">524305279349c3e0ce187384fe87ca13</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=cc9b431b9d386b4224bacf6ac3dab9891633df7d84727447c38ce6196e4f1c01-1294629031">6170cd45f1e0cd5d22c7a80d3b4d23f7</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=d25dcf67c7c41ef92bdc4c27bad761c8bfeb3473d9d275d08dfad089da0c217e-1294848031">77296904b96d0905960a5ff23e5935db</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=2701edf555dd17b58d8b454719c7d0c54b096e2dc1e862256df1d0495b197e1d-1294713960">4535c1f0ac6749a3c452a9bd4b3df655</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=c17160a635aa7d3827c3ba4109e92c386fba246c77cd742c415c8e6dbae50328-1294831583">2894c4e7df8fc9eb7d87a22255def354</a></p>
+</li>
+</ol>
+<p>Obviously it's entirely possible that 1 year ago Dionaea submitted a piece of malware that is since detected by all of scanners, but it's still quite a handy list when picking through lots of files.</p>
+<p><strong>Update</strong></p>
+<p>Similarly, if you want to see the most obscure viruses in the past 7 days, only a little tweak is required:</p>
+<div class="highlight"><pre>SELECT
+    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink
+FROM
+    virustotalscans, virustotals
+WHERE
+    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &#39;&#39; and virustotals.virustotal_timestamp &gt;= strftime(&#39;%s&#39;,&#39;now&#39;,&#39;-7 days&#39;)
+GROUP BY
+    virustotalscans.virustotal
+ORDER BY
+    hits asc;
+</pre></div></div>
+  <footer>
+    <a rel="full-article" href="../2011/01/picking-out-the-interesting-malware-from-dionaea/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2011/01/getting-dionaea-to-scan-previously-collected-malware/">Getting Dionaea to scan previously collected Malware</a>
+      </h1>
+      <p class="meta"><time datetime="2011-01-10T14:52:39+00:00" pubdate>Mon 10 January 2011</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Dionaea</li>
+<li>Honeypots</li>
+<li>Virustotal
+tags:</li>
+<li>virustotal dionaea</li>
+</ul>
+<p><strong>Update:</strong> This is in old post and the scripts got lost when I moved hosts. There is a script here: <a href="http://carnivore.it/2010/10/07/virustotal_api">http://carnivore.it/2010/10/07/virustotal_api</a> under "processing backlog" that will do what I describe below.</p>
+<p>I finally got around to signing up for a <a href="http://www.virustotal.com/advanced.html#publicapi">Virustotal API key</a> and popping it in to my <a href="http://dionaea.carnivore.it/">Dionaea</a> configuration. This gave my logs a lot more information for the new malware that was collected. My problem was that all my previous files had no Virustotal scan information attached.</p>
+<p>This would not do, so I wrote a Python script to populate the 'vtcache.sqlite' database with all the previous, unscanned pieces of malware. This will cause dionaea to scan all of the old malware with Virustotal and update the dionaea database with all that tasty data.</p>
+<p>Most of the magic here is the work of dionaea, all my script does is copy some data from one table to another. You must have the old malware still and the script is written for a setup, like mine, where most of the logs and malware is just left at default.</p>
+<p>The script is set up with dionaea defaults for directories, if yours are different you will need to change them by editing the file.</p>
+<p>Once configured, simply run:</p>
+<blockquote>
+<p>python vupdate.py</p>
+</blockquote>
+<p>No output is good output. That's all! Any feedback is appreciated, this is definitely experimental so backup anything important before you run it.</p></div>
+  <footer>
+    <a rel="full-article" href="../2011/01/getting-dionaea-to-scan-previously-collected-malware/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2010/12/bluepot-bluetooth-honeypot/">Announcing Bluepot: a Bluetooth Honeypot</a>
+      </h1>
+      <p class="meta"><time datetime="2010-12-30T05:01:55+00:00" pubdate>Thu 30 December 2010</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Bluetooth</li>
+<li>Honeypots</li>
+</ul>
+<p>I have finally got around to putting my Bluetooth Honeypot 'Bluepot' online and it is available (source and binaries) here: <a href="http://code.google.com/p/bluepot/">http://code.google.com/p/bluepot/</a></p>
+<p>Bluepot is a Bluetooth Honeypot created for a third year university project that attempts to mirror the functionality of internet based honeypots such as Dionaea but in the world of Bluetooth. It is written in Java and being released under the GNU General Public License v3.</p>
+<p>It is very much still a work in process but has a good deal of functionality, including a graphical user interface, support for multiple Bluetooth devices, ability to 'fake' device type and support for multiple vulnerabilities. The main support for malware collection is support for the OBEX Push protocol, enabling a computer to automatically download all files sent to it whilst under the guise of a smart phone or printer.</p>
+<p>Bluepot looks like this:</p>
+<p><a href="http://bluepot.googlecode.com/svn-history/r191/wiki/images/bluepot-main-smaller.png"><img alt="" src="http://bluepot.googlecode.com/svn-history/r191/wiki/images/bluepot-main-smaller.png" /></a></p>
+<p>Bluepot currently only runs on Linux, mainly because Windows only supports one Bluetooth device and support for multiple Bluetooth dervices was considered to be a major feature of the project. Adding Windows support should be relatively trivial and is a definite possibility for future development.</p>
+<p>Looking back at Bluepot, 7 months after completing development,there are a number of changes I would like to make and features I would like to add. The code isn't perfect but isn't that awful either, all constructive criticism is welcomed.</p>
+<p>More about Bluepot: <a href="http://code.google.com/p/bluepot/">http://code.google.com/p/bluepot/</a></p></div>
+  <footer>
+    <a rel="full-article" href="../2010/12/bluepot-bluetooth-honeypot/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2010/11/kippo-customisations/">Kippo Customisations</a>
+      </h1>
+      <p class="meta"><time datetime="2010-11-18T13:09:28+00:00" pubdate>Thu 18 November 2010</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Honeypots</li>
+<li>SSH</li>
+</ul>
+<p>Having ran Kippo for a while now I am beginning to suspect that people are recognising the Kippo install and moving on. This isn't too difficult as there are some fairly static  pieces of data that Kippo will provide you with should you request them. Fortunately it's very easy to change these as we see fit, so we will!</p>
+<p><strong>NOTE: Don't <em>just</em> do this.</strong> This is not exactly best security practice. I personally am using information about a computer that is not running Kippo and putting it on to a different server. If you just run the below commands on a computer running Kippo then an attacker is going to know all sorts of information about your computer that may give them the upper hand in an actual attack. At the very list edit the <strong>passwd</strong> file to replace usernames.</p>
+<p>The following commands are to illustrate what I have done. Copying and pasting may not be the best of ideas.</p>
+<p>Update <strong>honeyfs</strong>:</p>
+<blockquote>
+<div class="highlight"><pre>cat /proc/cpuinfo &gt; kippo/honeyfs/proc/cpuinfo
+cat /etc/issue &gt; kippo/honeyfs/etc/issue
+cat /etc/passwd &gt; kippo/honeyfs/etc/passwd
+</pre></div>
+
+
+</blockquote>
+<p>Update <strong>txtcmds</strong>:</p>
+<blockquote>
+<div class="highlight"><pre>dmesg &gt; kippo/txtcmds/bin/dmesg
+mount &gt; kippo/txtcmds/bin/mount
+#<span class="nt">&lt;em&gt;&lt;strong&gt;</span>definitely<span class="nt">&lt;/strong&gt;</span> change the I.P. addresses within this file
+<span class="nt">&lt;/em&gt;</span>ifconfig &gt; kippo/txtcmds/sbin/ifconfig
+</pre></div>
+
+
+</blockquote>
+<p>Next up I am going to add some more <strong>'programs'</strong></p>
+<blockquote>
+<div class="highlight"><pre>php -v &gt; kippo/txtcmds/bin/
+python --version &gt; kippo/txtcmds/bin/python
+</pre></div>
+
+
+</blockquote>
+<p>Arguably these two may alert the attacker as they will be expecting to be able to type php and python rather than just get the version output but my hope is that it will fool them in to thinking that they are installed and encourage them to <em>wget</em> some of their tools.</p>
+<p>So now hopefully our honeypot will look more legitimate to the attacker, or at least one that has gotten used to stock Kippo installs. Only time will tell!</p>
+<blockquote></blockquote></div>
+  <footer>
+    <a rel="full-article" href="../2010/11/kippo-customisations/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="../author/andrew-smith5.html">&larr; Older</a>
+
+    <a class="next" href="../author/andrew-smith3.html">Newer &rarr;</a>
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="../2015/03/running-manuka-docker-honeypot/">Running manuka docker honeypot</a>
+      </li>
+      <li class="post">
+          <a href="../2014/05/docker-volume-and-docker-volume/">Docker volume and docker VOLUME</a>
+      </li>
+      <li class="post">
+          <a href="../2014/03/quick-and-easy-ssh-mitm/">Quick and Easy SSH MITM</a>
+      </li>
+      <li class="post">
+          <a href="../2013/08/raspberry-pi-wi-fi-honeypot/">Raspberry Pi Wi-Fi Honeypot</a>
+      </li>
+      <li class="post">
+          <a href="../2013/04/the-15-dollar-honeypot/">The $15 (per year) Honeypot</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="../category/blog.html">Blog</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="../tag/.html"></a>,    <a href="../tag/raspberry-pi.html">raspberry-pi</a>,    <a href="../tag/dionaea.html">dionaea</a>,    <a href="../tag/honeypots.html">honeypots</a>,    <a href="../tag/volume.html">volume</a>,    <a href="../tag/gwt.html">gwt</a>,    <a href="../tag/kippo.html">kippo</a>,    <a href="../tag/mitm.html">mitm</a>,    <a href="../tag/ssh.html">ssh</a>,    <a href="../tag/ec2-honeypot.html">ec2 honeypot</a>,    <a href="../tag/docker.html">docker</a>,    <a href="../tag/wi-fi.html">wi-fi</a>,    <a href="../tag/honeypot.html">honeypot</a>,    <a href="../tag/access-point.html">access-point</a>  </section>
+
+
+
+  <section>
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+      <li class="loading">Status updating...</li>
+    </ul>
+    <script type="text/javascript">
+      $.domReady(function(){
+          if (!window.jXHR){
+              var jxhr = document.createElement('script');
+              jxhr.type = 'text/javascript';
+              jxhr.src = '../theme/js/jXHR.js';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(jxhr, s);
+          }
+
+          github.showRepos({
+              user: 'andrewmichaelsmith',
+              count: 5,
+              skip_forks: false,
+              target: '#gh_repos'
+          });
+      });
+    </script>
+    <script src="../theme/js/github.js" type="text/javascript"> </script>
+  </section>
+
+
+<section>
+    <p>Follow <a href="http://twitter.com/bingleybeep">@bingleybeep</a></p>
+</section>
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Smith -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33475321-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2');
+    ga('send', 'pageview');
+</script>
+	<script type="text/javascript">
+	  var disqus_shortname = 'ams-blog';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

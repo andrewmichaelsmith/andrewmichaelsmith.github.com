@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Andy Smith's Blog - Articles by Andrew Smith</title>
+  <meta name="author" content="Andrew Smith">
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="../favicon.png" rel="icon">
+  <link href="../theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="../theme/js/modernizr-2.0.js"></script>
+  <script src="../theme/js/ender.js"></script>
+  <script src="../theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="../">Andy Smith's Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+
+<ul class="main-navigation">
+      <li><a href="../pages/bluepot.html">bluepot</a></li>
+      <li><a href="../pages/chump.html">chump</a></li>
+      <li><a href="../pages/contact.html">Contact</a></li>
+    <li >
+    <a href="../category/blog.html">Blog</a>
+    </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2012/03/dionaea-honeypot-on-ec2-in-20-minutes/">Dionaea Honeypot on EC2 in 20 minutes</a>
+      </h1>
+      <p class="meta"><time datetime="2012-03-05T15:19:25+00:00" pubdate>Mon 05 March 2012</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Dionaea</li>
+<li>Ubuntu</li>
+</ul>
+<p>This is a tutorial on setting up Dionaea on an EC2 instance. Amazon currently off a <a href="http://aws.amazon.com/free/">free EC2 Micro Instance</a> so you should be able to do this too without any cost.</p>
+<h2>Pre-requisites</h2>
+<ul>
+<li><a href="http://aws.amazon.com/">Amazon AWS</a> account</li>
+</ul>
+<h2>EC2 Server Set up for Dionaea</h2>
+<ol>
+<li>
+<p>Sign in to your Amazon AWS console, choose the <strong>EC2 </strong>tab and choose a <strong>Region</strong> (I have chosen 'Ascia Pacific (Singapore)')
+<a href="/images/2012/03/1.png"><img alt="" src="/images/2012/03/1.png" /></a></p>
+</li>
+<li>
+<p>Push <strong>Launch Instance </strong>and choose <strong>Classic Wizard </strong>and push <strong>Continue</strong>
+<a href="/images/2012/03/2.png"><img alt="" src="/images/2012/03/2.png" /></a></p>
+</li>
+<li>
+<p>Click on the <strong>Community AMIs</strong> tab. Here you need a AMI for Ubuntu 10.04, these vary between AWS Regions. A list of AMIs is available <a href="http://cloud-images.ubuntu.com/releases/10.04/release/">here</a>. Pick an AMI with root store 'ebs' and arch '32-bit'.</p>
+</li>
+<li>
+<p>For Asia Pacific use the AMI <strong>ami-7289cd20 </strong>(Pick an AMI with root store 'ebs' and arch 32-bit), then push <strong>Select</strong>**
+<a href="/images/2012/03/3.png"><img alt="" src="/images/2012/03/3.png" /></a></p>
+</li>
+<li>
+<p>Make sure to change the <strong>Instance Type</strong> to <strong>Micro</strong> (from Small), otherwise you will be charged, and push <strong>Continue</strong>
+<a href="/images/2012/03/4.png"><img alt="" src="/images/2012/03/4.png" /></a></p>
+</li>
+<li>
+<p><strong>Continue</strong> until you are prompted to <strong>Create a Key Pair</strong>, choose a name and <strong>Create and Download Your Key Pair</strong> (save this file somewhere safe for later), push <strong>Continue</strong>
+.<a href="/images/2012/03/5.png"><img alt="" src="/images/2012/03/5.png" /></a></p>
+</li>
+<li>
+<p>Choose to <strong>Create a New Security Group</strong>, for <strong>Create a new rule</strong> choose <strong>All TCP</strong> and <strong>Source</strong> choose <strong>0.0.0.0/0</strong>. Enter whatever you like in Name/Description. Push <strong>Add Rule</strong>
+<a href="/images/2012/03/6.png"><img alt="" src="/images/2012/03/6.png" /></a></p>
+</li>
+<li>
+<p>Push <strong>Continue</strong> and then <strong>Launch</strong></p>
+</li>
+</ol>
+<p>Your server has now been set up and will shortly launch. Note that you have allowed TCP access to all services on this machine so do not install anything that could be compromised. It's possible to tighten up that security but it's a little more complicated - perhaps a subject for a later blog post.</p>
+<h2>Setting up Dionaea on your EC2 Server</h2>
+<ol>
+<li>
+<p>Find the address of your server by selecting it and choosing <strong>Instance Actions</strong> &gt; <strong>Connect</strong>. Follow the instruction to connect to your server using the key you generated and downloaded earlier. <em>Putty users may need to <a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html">use </a><a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html">puttygen</a> to convert their key.</em></p>
+</li>
+<li>
+<p>Once you're connected you can have Dionaea up and running in minutes by following this tutorial: <a href="/2012/02/quick-install-of-dionaea-on-ubuntu/">/2012/02/quick-install-of-dionaea-on-ubuntu/</a></p>
+</li>
+</ol></div>
+  <footer>
+    <a rel="full-article" href="../2012/03/dionaea-honeypot-on-ec2-in-20-minutes/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2012/02/quick-install-of-dionaea-on-ubuntu/">Quick install of Dionaea on Ubuntu</a>
+      </h1>
+      <p class="meta"><time datetime="2012-02-27T08:29:32+00:00" pubdate>Mon 27 February 2012</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Dionaea</li>
+</ul>
+<p><strong>Updated 05/03/2012: </strong>Improved instructions based upon <a href="http://blog.dinotools.de/2011/08/18/dionaea-howto-install-dionaea-using-a-ppa">another guide</a>.</p>
+<p><a href="http://dionaea.carnivore.it/#compiling">Dionaea</a> is a great honeypot but I have found that getting it up and running is not exactly the quickest process in the world.</p>
+<p>However, it seems that the<a href="http://www.honeynet.org/"> honeynet project</a> have started maintaining <a href="https://launchpad.net/~honeynet">Ubuntu packages</a> for Dionaea, which makes the install process a lot more simple. The following is how I got it up and running.</p>
+<h2>Install Dionaea on Ubuntu Natty Narwhal (11.04)</h2>
+<p>First set up the repository and install dionaea:</p>
+<div class="highlight"><pre>sudo add-apt-repository ppa:honeynet/nightly
+sudo apt-get update
+sudo apt-get install dionaea
+</pre></div>
+
+
+<p>Now, a little directory  set up:</p>
+<div class="highlight"><pre>sudo mkdir -p /var/dionaea/wwwroot
+sudo mkdir -p /var/dionaea/binaries
+sudo mkdir -p /var/dionaea/log
+sudo chown -R nobody:nogroup /var/dionaea/
+</pre></div>
+
+
+<p>Now we update our config file:</p>
+<div class="highlight"><pre>sudo mv /etc/dionaea/dionaea.conf.dist /etc/dionaea/dionaea.conf
+sudo sed -i &#39;s/var\/dionaea\///g&#39; /etc/dionaea/dionaea.conf
+sudo sed -i &#39;s/log\//\/var\/dionaea\/log\//g&#39; /etc/dionaea/dionaea.conf
+</pre></div>
+
+
+<p>Finally, launch dionaea:</p>
+<div class="highlight"><pre>sudo dionaea -c /etc/dionaea/dionaea.conf -w /var/dionaea -u nobody -g nogroup -D
+</pre></div>
+
+
+<p>And there you have it! As simple as that. I should note that this will get you up and running quickly but is not necessarily the most secure way to run Dionaea.</p>
+<p>This makes it really easy for anyone interested in Dionaea to get it up and running - even Windows users can grab <a href="https://www.virtualbox.org/">Virtualbox</a> and an <a href="http://virtualboxes.org/images/ubuntu/">Ubuntu Image</a> and be up and running in no time.</p></div>
+  <footer>
+    <a rel="full-article" href="../2012/02/quick-install-of-dionaea-on-ubuntu/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2011/12/kippo-graph-is-neat-but-calls-home/">kippo-graph is neat but calls home</a>
+      </h1>
+      <p class="meta"><time datetime="2011-12-26T18:51:28+00:00" pubdate>Mon 26 December 2011</time></p>
+</header>
+
+  <div class="entry-content"><p><strong>Update: </strong>The author has since released an updated version with the update check (calling home) turned off by default: <a href="http://bruteforce.gr/kippo-graph">http://bruteforce.gr/kippo-graph</a></p>
+<p>I've just been playing around with <a href="http://bruteforce.gr/kippo-graph">kippo-graph</a>, I like it, it's quick and easy to set up and provides features I've wanted for a while. The only thing I don't like about it is the 'version checker' which calls home to make sure it's up to date.</p>
+<p>I'm sure the author's intentions are completely innocent but personally I like to keep the I.P. addresses of my honeypots private. To stop kippo-graph from calling home, simply open <code>include/misc/versionCheck.php</code> and replace the contents with the following:</p>
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// this is the version of the deployed script</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;VERSION&#39;</span><span class="p">,</span> <span class="s1">&#39;0.5&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">isUpToDate</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</pre></div></div>
+  <footer>
+    <a rel="full-article" href="../2011/12/kippo-graph-is-neat-but-calls-home/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="../2011/01/list-interesting-kippo-tty-logs-by-date/">List interesting Kippo TTY Logs by Date</a>
+      </h1>
+      <p class="meta"><time datetime="2011-01-24T12:35:09+00:00" pubdate>Mon 24 January 2011</time></p>
+</header>
+
+  <div class="entry-content"><ul>
+<li>Honeypots</li>
+<li>Kippo</li>
+<li>Scripts</li>
+</ul>
+<p>A quick one, mostly a reference. It seems those .log files that are 87 bytes tend to be connections followed swiftly by disconnects.
+<code></code></p>
+<p><code>ls -alFhL ~/kippo/log/tty | grep -v 87</code></p>
+<p>Then we can skim through our list</p>
+<p><code>python ~/kippo/utils/playlog.py ~/kippo/log/tty/20110124-x-x.log</code></p>
+<p>What I would love for Kippo is some form of online tool to allow you to 'work through' an annotate the (wonderful) tty logs.</p></div>
+  <footer>
+    <a rel="full-article" href="../2011/01/list-interesting-kippo-tty-logs-by-date/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="../author/andrew-smith4.html">&larr; Older</a>
+
+    <a class="next" href="../author/andrew-smith2.html">Newer &rarr;</a>
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="../2015/03/running-manuka-docker-honeypot/">Running manuka docker honeypot</a>
+      </li>
+      <li class="post">
+          <a href="../2014/05/docker-volume-and-docker-volume/">Docker volume and docker VOLUME</a>
+      </li>
+      <li class="post">
+          <a href="../2014/03/quick-and-easy-ssh-mitm/">Quick and Easy SSH MITM</a>
+      </li>
+      <li class="post">
+          <a href="../2013/08/raspberry-pi-wi-fi-honeypot/">Raspberry Pi Wi-Fi Honeypot</a>
+      </li>
+      <li class="post">
+          <a href="../2013/04/the-15-dollar-honeypot/">The $15 (per year) Honeypot</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="../category/blog.html">Blog</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="../tag/.html"></a>,    <a href="../tag/raspberry-pi.html">raspberry-pi</a>,    <a href="../tag/dionaea.html">dionaea</a>,    <a href="../tag/honeypots.html">honeypots</a>,    <a href="../tag/volume.html">volume</a>,    <a href="../tag/gwt.html">gwt</a>,    <a href="../tag/kippo.html">kippo</a>,    <a href="../tag/mitm.html">mitm</a>,    <a href="../tag/ssh.html">ssh</a>,    <a href="../tag/ec2-honeypot.html">ec2 honeypot</a>,    <a href="../tag/docker.html">docker</a>,    <a href="../tag/wi-fi.html">wi-fi</a>,    <a href="../tag/honeypot.html">honeypot</a>,    <a href="../tag/access-point.html">access-point</a>  </section>
+
+
+
+  <section>
+    <h1>GitHub Repos</h1>
+    <ul id="gh_repos">
+      <li class="loading">Status updating...</li>
+    </ul>
+    <script type="text/javascript">
+      $.domReady(function(){
+          if (!window.jXHR){
+              var jxhr = document.createElement('script');
+              jxhr.type = 'text/javascript';
+              jxhr.src = '../theme/js/jXHR.js';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(jxhr, s);
+          }
+
+          github.showRepos({
+              user: 'andrewmichaelsmith',
+              count: 5,
+              skip_forks: false,
+              target: '#gh_repos'
+          });
+      });
+    </script>
+    <script src="../theme/js/github.js" type="text/javascript"> </script>
+  </section>
+
+
+<section>
+    <p>Follow <a href="http://twitter.com/bingleybeep">@bingleybeep</a></p>
+</section>
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Smith -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33475321-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2');
+    ga('send', 'pageview');
+</script>
+	<script type="text/javascript">
+	  var disqus_shortname = 'ams-blog';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>
