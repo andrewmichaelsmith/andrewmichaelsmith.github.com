@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>kippo-graph is neat but calls home</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="Update: The author has since released an updated version with the update check (calling home) turned off by default:..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2011/12/kippo-graph-is-neat-but-calls-home/" rel="bookmark"
+           title="Permalink to kippo-graph is neat but calls home">kippo-graph is neat but calls home</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2011-12-26T18:51:28+00:00">
+                Published: Mon 26 December 2011
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->      <p><strong>Update: </strong>The author has since released an updated version with the update check (calling home) turned off by default: <a href="http://bruteforce.gr/kippo-graph">http://bruteforce.gr/kippo-graph</a></p>
+<p>I've just been playing around with <a href="http://bruteforce.gr/kippo-graph">kippo-graph</a>, I like it, it's quick and easy to set up and provides features I've wanted for a while. The only thing I don't like about it is the 'version checker' which calls home to make sure it's up to date.</p>
+<p>I'm sure the author's intentions are completely innocent but personally I like to keep the I.P. addresses of my honeypots private. To stop kippo-graph from calling home, simply open <code>include/misc/versionCheck.php</code> and replace the contents with the following:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="c1">// this is the version of the deployed script</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;VERSION&#39;</span><span class="p">,</span> <span class="s1">&#39;0.5&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">isUpToDate</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2011/12/kippo-graph-is-neat-but-calls-home/';
+        var disqus_url = '../../../2011/12/kippo-graph-is-neat-but-calls-home/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

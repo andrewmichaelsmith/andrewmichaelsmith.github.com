@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Quick install of Dionaea on Ubuntu</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="Dionaea Updated 05/03/2012: Improved instructions based upon another guide. Dionaea is a great honeypot but I have found that getting it up and..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2012/02/quick-install-of-dionaea-on-ubuntu/" rel="bookmark"
+           title="Permalink to Quick install of Dionaea on Ubuntu">Quick install of Dionaea on Ubuntu</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2012-02-27T08:29:32+00:00">
+                Published: Mon 27 February 2012
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->      <ul>
+<li>Dionaea</li>
+</ul>
+<p><strong>Updated 05/03/2012: </strong>Improved instructions based upon <a href="http://blog.dinotools.de/2011/08/18/dionaea-howto-install-dionaea-using-a-ppa">another guide</a>.</p>
+<p><a href="http://dionaea.carnivore.it/#compiling">Dionaea</a> is a great honeypot but I have found that getting it up and running is not exactly the quickest process in the world.</p>
+<p>However, it seems that the<a href="http://www.honeynet.org/"> honeynet project</a> have started maintaining <a href="https://launchpad.net/~honeynet">Ubuntu packages</a> for Dionaea, which makes the install process a lot more simple. The following is how I got it up and running.</p>
+<h2>Install Dionaea on Ubuntu Natty Narwhal (11.04)</h2>
+<p>First set up the repository and install dionaea:</p>
+<div class="highlight"><pre><span></span><code><span class="err">sudo add-apt-repository ppa:honeynet/nightly</span>
+<span class="err">sudo apt-get update</span>
+<span class="err">sudo apt-get install dionaea</span>
+</code></pre></div>
+
+<p>Now, a little directory  set up:</p>
+<div class="highlight"><pre><span></span><code><span class="err">sudo mkdir -p /var/dionaea/wwwroot</span>
+<span class="err">sudo mkdir -p /var/dionaea/binaries</span>
+<span class="err">sudo mkdir -p /var/dionaea/log</span>
+<span class="err">sudo chown -R nobody:nogroup /var/dionaea/</span>
+</code></pre></div>
+
+<p>Now we update our config file:</p>
+<div class="highlight"><pre><span></span><code><span class="err">sudo mv /etc/dionaea/dionaea.conf.dist /etc/dionaea/dionaea.conf</span>
+<span class="err">sudo sed -i &#39;s/var\/dionaea\///g&#39; /etc/dionaea/dionaea.conf</span>
+<span class="err">sudo sed -i &#39;s/log\//\/var\/dionaea\/log\//g&#39; /etc/dionaea/dionaea.conf</span>
+</code></pre></div>
+
+<p>Finally, launch dionaea:</p>
+<div class="highlight"><pre><span></span><code><span class="err">sudo dionaea -c /etc/dionaea/dionaea.conf -w /var/dionaea -u nobody -g nogroup -D</span>
+</code></pre></div>
+
+<p>And there you have it! As simple as that. I should note that this will get you up and running quickly but is not necessarily the most secure way to run Dionaea.</p>
+<p>This makes it really easy for anyone interested in Dionaea to get it up and running - even Windows users can grab <a href="https://www.virtualbox.org/">Virtualbox</a> and an <a href="http://virtualboxes.org/images/ubuntu/">Ubuntu Image</a> and be up and running in no time.</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2012/02/quick-install-of-dionaea-on-ubuntu/';
+        var disqus_url = '../../../2012/02/quick-install-of-dionaea-on-ubuntu/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

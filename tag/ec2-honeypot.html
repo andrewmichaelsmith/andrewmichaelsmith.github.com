@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Andy Smith's Blog - ec2 honeypot</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../pages/contact.html">Contact</a></li>
+                    <li><a href="../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../2012/07/multiple-ips-for-ec2-honeypots/">Multiple IPs for EC2 Instances</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2012-07-19T14:14:00+01:00">
+                Published: Thu 19 July 2012
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+<p>tags: <a href="../tag/ec2-honeypot.html">ec2 honeypot</a> </p>
+</footer><!-- /.post-info --><p><em>Amazon recently announced an increase in their IP Address limits for single EC2 instances. At first glance this looks like big news for anyone who runs a honeypot on EC2. My research has found that it's not quite as good as it sounds but there are definite benefits for anyone with a little cash to spend.</em></p>
+<p>Up until recently it has not been possible to have more than 1 IP Address associated with your EC2 instance*. As someone who runs a Dionaea Honeypot on EC2 I have been looking for a way to get multiple IP addresses pointed at my instance for a while now.</p>
+<p>Which is why I was quite excited when Amazon <a href="http://aws.amazon.com/about-aws/whats-new/2012/07/06/multiple-ip-addresses-for-amazon-ec2-instances-in-amazon-vpc/">announced</a> that they would now support <strong>up to 240 IP Addresses</strong> per single EC2 instance. That figure actually refers to private IPs, but in AWS land a private IP can have a public IP pointed at it. So this sounds like big news for anyone running a honeypot on an EC2 instance; more IPs means more interesting honeypot data. 240 IPs means a crap load of interesting honeypot data.</p>
+<p>Unfortunately it's not quite as simple as that. The 240 IP limit only applies to the rather expensive High-Memory Quadruple Extra Large ($1317.60 a month) instance. Smaller instances have smaller limits. The smaller amounts are as follows:</p>
+<ul>
+<li>Micro: -</li>
+<li>Small: 8</li>
+<li>Medium: 12</li>
+<li>Large: 30</li>
+</ul>
+<p><a href="http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/instance-types.html">source</a></p>
+<p>As you can see that means that anyone hoping to get multiple IPs on their free tier micro instance are out of luck.</p>
+<p>For those thinking that 30 IPs is not too bad and they may splash out on a large, there's a further limitation from Amazon. They limit EC2 users to <a href="http://aws.amazon.com/contact-us/eip_limit_request/">5 IP Addresses per account</a>. Fortunately, you can <a href="http://aws.amazon.com/contact-us/eip_limit_request/">request an increase</a>, which is exactly what I did. I found that there wasn't a need for too much detail, my e-mail looked something like this:</p>
+<blockquote>
+<p>Hi</p>
+<p>I am looking to increase my IP limit, please, I need a higher amount for the security  research that I use my EC2 instances for.
+Ideally I would like 240 but will be grateful for a smaller amount if that isn't possible.</p>
+<p>Thanks</p>
+</blockquote>
+<p>Amazon raised my limit to <strong>20 IP addresses</strong>. In this day and age to IPv4 exhaustion I suppose 20 is not to be sniffed at but it could be better, maybe if I made a stronger case in the future (or had more paid instances..) I would get more but it's hard to tell.</p>
+<p>In conclusion, Amazon's recent limit increase is only big news for big spenders. It's not possible to just grab 240 IP and point them at your free tier micro instance. If all you want is a few more IPs then it's probably more cost effective to <a href="http://andrewmichaelsmith.com/2010/10/honeypot-hosting/">grab a budget VPS</a>.</p>
+<p>However, if you want the flexibility of EC2 then this may be worthwile. The great thing about EC2 is the flexibility. You can grab those IPs and release them as you like. So if there was some particularly interesting vulnerability you wanted to emulate, you could quickly spin up a 20 IP instance, run it for a few days and then spin it back down. Then you could release the data publicly without any worry about compromising your honeypot's anonymity.</p>
+<p>I intend to follow up this post with a quick step by step guide on setting up a 20 IP Dionaea honeypot.</p>
+<p>* <em>I believe that strictly speaking the limit is 2 but I looked in to this once and it requires all sorts of faffing with things like load balancers which I deemed to not be worth the effort.</em></p><p>There are <a href="../2012/07/multiple-ips-for-ec2-honeypots/#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

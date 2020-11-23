@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Private tor network on kubernetes</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="I recently came across someone running a private tor network with docker and immediately decided I'd have to do similar but in Kubernetes. I also..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2017/03/private-tor-network-on-kubernetes/" rel="bookmark"
+           title="Permalink to Private tor network on kubernetes">Private tor network on kubernetes</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-03-01T00:00:00+00:00">
+                Published: Wed 01 March 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+<p>tags: <a href="../../../tag/tor.html">tor</a> <a href="../../../tag/kubernetes.html">kubernetes</a> </p>
+</footer><!-- /.post-info -->      <p>I recently came across someone running a <a href="https://www.antitree.com/2016/07/01/run-a-private-tor-network-using-docker/">private tor network with docker</a> and immediately decided I'd have to do similar but in Kubernetes.
+I also followed another useful <a href="http://fengy.me/prog/2015/01/09/private-tor-network.html">blog post</a>
+about this subject.</p>
+<p>This seemed like a great opportunity to learn about the inner workings of the tor
+network and flex my kubernetes muscles. Here are some of the tricky bits I
+encountered for anyone trying to do something similar.</p>
+<h2>Testing mode</h2>
+<p>To get a chance of running our own tor network we must enable
+<code>TestingTorNetwork</code>, this tweaks a number of settings, such as not totally
+banning private IPs and reducing delays in voting.</p>
+<h2>Directory Authorities</h2>
+<p>A fundamental part of a tor network is the Directory Authority. When connecting
+to the network the client will connect to one of these to find out a list of
+relays to further connect to. These are hardcoded in to the <a href="https://gitweb.torproject.org/tor.git/tree/src/or/config.c#n1011">tor source
+code</a>*.</p>
+<p>Fortunately there are config options we can use to override these values 
+(<code>DirAuthority</code>). This config needs to have not just the address but the
+fingerprint of the authority (so we know we can trust it).</p>
+<p>So from initial research it sounded like all we need to do was:</p>
+<ul>
+<li>Generate certificates and signatures for 3 directory authorities</li>
+<li>Create directory authorities (configured with their certificates)</li>
+<li>Configure 10 relays to talk to directory authorities</li>
+<li>Create 10 relays</li>
+</ul>
+<h2>ConfigMaps and directories</h2>
+<p>When trying to get the directory authorities running I had issues poking the
+certificates in. tor is kind of specific about the structure it expects (an <code>id</code> 
+and <code>keys</code> dir). Because <code>ConfigMap</code>s don't do subdirectories (<a href="http://stackoverflow.com/questions/34935301/is-there-a-way-to-create-a-kubernetes-secret-subdirectory">ref</a>)
+I ended up using a flat structure in the ConfigMap and using my  <code>docker-entrypoint.sh</code>
+to set up symlinks to achieve the desired structure. </p>
+<h2>DirtAuthority address</h2>
+<p>For the <code>DirAuthority</code> line we're expected to use an IP address 
+(<a href="https://lists.torproject.org/pipermail/tor-relays/2017-February/011878.html">mailing list discussion</a>).
+From a kubernetes point of view this is a bit annoying. Using a Service we can 
+easily know the hostname upfront but an IP is more tricky. We could set the
+<code>ClusterIP</code> but that leaves config bound to a particular cluster setup. </p>
+<p>The solution is not so bad - when we generate each <code>DirAuthority</code> line  we just 
+make sure we've already created the Services and use their IP addresses. We can
+use jsonpath to get the IP:</p>
+<div class="highlight"><pre><span></span><code><span class="err">kubectl get svc da1 -o &#39;jsonpath={.spec.clusterIP}&#39;</span>
+</code></pre></div>
+
+<p>Works, but it makes our setup a bit less elegant - we have to generate config 
+files based upon the state of the kubernetes cluster.</p>
+<h2>Relay address</h2>
+<p>On start, if not provided with one, tor will search for an IP address to use. As
+we don't know our pod IP up front, this sounds ideal. Unfortunately, tor will
+not pick a private IP address
+(<a href="https://gitweb.torproject.org/tor.git/tree/src/common/address.c#n1737">ref</a>)
+unless explicitly given that address. </p>
+<p>This means we have to have add another trick - a <code>docker-entrypoint.sh</code> to append
+an <code>Address</code> line to our <code>torrc</code> with the pod's IP . Again, not awful, but not 
+pretty.</p>
+<h2>Running it</h2>
+<p>With all these pieces in place I was able to successfully run a private tor
+network. I can route internet traffic through it (and see it hopping between
+servers) and scale the number of relays up and down.</p>
+<h2>Conclusion</h2>
+<p>These are the main problems I had to overcome to get tor running inside
+kubernetes.  The resulting set of scripts is on github: <a href="https://github.com/andrewmichaelsmith/private-tor-network-kube">andrewmichaelsmith/private-tor-network-kube</a>.</p>
+<p>I'm reasonably happy with my final product, it produces a fully
+operational tor network. There is a certain amount of <code>bash</code> scaffolding which 
+I'm not a huge fan of. It might be interesting to try and do this project again 
+but as an <a href="https://coreos.com/blog/introducing-operators.html">Operator</a>.</p>
+<p>** <em>I'm lying here to keep things simple. There are also Fallback mirrors that tor
+will connect to first. These are also hardcoded in to the <a href="https://gitweb.torproject.org/tor.git/tree/src/or/fallback_dirs.inc">tor source
+code</a></em>.</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2017/03/private-tor-network-on-kubernetes/';
+        var disqus_url = '../../../2017/03/private-tor-network-on-kubernetes/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Automatic Honeypot Setup Script</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="I have just finished work on the first version of my automatic honeypot setup script. This script will turn a vanilla install of Ubuntu 12.04 into..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2013/01/automatic-honeypot-setup-script/" rel="bookmark"
+           title="Permalink to Automatic Honeypot Setup Script">Automatic Honeypot Setup Script</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2013-01-23T21:37:00+00:00">
+                Published: Wed 23 January 2013
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->      <p>I have just finished work on the first version of my <a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/">automatic honeypot setup
+script</a>. This
+script will turn a vanilla install of Ubuntu 12.04 into a fully functioning
+honeypot in under 3 minutes.</p>
+<p>I have two main issues that I have encountered when playing around with honeypot
+software.</p>
+<p>Firstly, you often won't find out that there are problems with your
+configuration until an attacker hits. And this can sometimes take hours.
+Nothing is more frustrating than coming back to a honeypot after a week to find
+a log file full of <code>Access Denied</code> messages.</p>
+<p>Secondly, honeypot software is designed with technical users in mind. Installing
+<a href="http://httpd.apache.org/">Apache Web Server</a> is a matter of
+<code>apt-get install apache2</code>, it will start on system start up and come with helpful
+defaults. Whereas if you want to install <a href="http://code.google.com/p/kippo/">kippo</a>, you
+need to check out the subversion repository and it certainly won't set itself up
+to run on startup.</p>
+<p>This script is my solution to these problems: <a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/">https://github.com/andrewmichaelsmith/honeypot-setup-script/</a></p>
+<p>Running the script will install the following services:</p>
+<ul>
+<li><a href="http://dionaea.carnivore.it/">Dionaea</a></li>
+<li><a href="http://code.google.com/p/kippo/">Kippo</a></li>
+<li><a href="http://lcamtuf.coredump.cx/p0f3/#/">p0f</a></li>
+</ul>
+<p>All of these services will:</p>
+<ul>
+<li>run straight out of the box with no additional configuration</li>
+<li>start on system start up and log to <code>/var/log</code></li>
+<li>have useful and secure defaults</li>
+</ul>
+<p>You will be prompted for exactly one piece of information:</p>
+<ul>
+<li>the network interface you want these services to run on</li>
+</ul>
+<p>This the first release and testing has been limited to Ubuntu 12.04. This script
+does all sorts of things as a super user, so please, for now, only run it on a
+clean install.</p>
+<p>Feature requests, bug reports and pull requests are encouraged on <a href="https://github.com/andrewmichaelsmith/honeypot-setup-script/">the Github</a>.</p>
+<p>If you have any other queries, please feel free to <a href="/contact">contact me</a>.</p>
+<p>Here's a video of a 3 minute install:</p>
+<iframe width="420" height="315" src="http://www.youtube.com/embed/bQ8OwKf2sjA" frameborder="0" allowfullscreen></iframe>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2013/01/automatic-honeypot-setup-script/';
+        var disqus_url = '../../../2013/01/automatic-honeypot-setup-script/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

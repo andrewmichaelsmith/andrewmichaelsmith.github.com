@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Andy Smith's Blog - Blog</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+                <section id="content" class="body">
+                    <ol id="posts-list" class="hfeed" start="3">
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../2011/12/kippo-graph-is-neat-but-calls-home/" rel="bookmark"
+                           title="Permalink to kippo-graph is neat but calls home">kippo-graph is neat but calls home</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2011-12-26T18:51:28+00:00">
+                Published: Mon 26 December 2011
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->                <p><strong>Update: </strong>The author has since released an updated version with the update check (calling home) turned off by default: <a href="http://bruteforce.gr/kippo-graph">http://bruteforce.gr/kippo-graph</a></p>
+<p>I've just been playing around with <a href="http://bruteforce.gr/kippo-graph">kippo-graph</a>, I like it, it's quick and easy to set up and provides features I've wanted for a while. The only thing I don't like about it is the 'version checker' which calls home to make sure it's up to date.</p>
+<p>I'm sure the author's intentions are completely innocent but personally I like to keep the I.P. addresses of my honeypots private. To stop kippo-graph from calling home, simply open <code>include/misc/versionCheck.php</code> and replace the contents with the following:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="c1">// this is the version of the deployed script</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;VERSION&#39;</span><span class="p">,</span> <span class="s1">&#39;0.5&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">isUpToDate</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+                <a class="readmore" href="../2011/12/kippo-graph-is-neat-but-calls-home/">read more</a>
+<p>There are <a href="../2011/12/kippo-graph-is-neat-but-calls-home/#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../2011/01/list-interesting-kippo-tty-logs-by-date/" rel="bookmark"
+                           title="Permalink to List interesting Kippo TTY Logs by Date">List interesting Kippo TTY Logs by Date</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2011-01-24T12:35:09+00:00">
+                Published: Mon 24 January 2011
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->                <ul>
+<li>Honeypots</li>
+<li>Kippo</li>
+<li>Scripts</li>
+</ul>
+<p>A quick one, mostly a reference. It seems those .log files that are 87 bytes tend to be connections followed swiftly by disconnects.
+<code></code></p>
+<p><code>ls -alFhL ~/kippo/log/tty | grep -v 87</code></p>
+<p>Then we can skim through our list</p>
+<p><code>python ~/kippo/utils/playlog.py ~/kippo/log/tty/20110124-x-x.log</code></p>
+<p>What I would love for Kippo is some form of online tool to allow you to 'work through' an annotate the (wonderful) tty logs.</p>
+                <a class="readmore" href="../2011/01/list-interesting-kippo-tty-logs-by-date/">read more</a>
+<p>There are <a href="../2011/01/list-interesting-kippo-tty-logs-by-date/#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../2011/01/picking-out-the-interesting-malware-from-dionaea/" rel="bookmark"
+                           title="Permalink to Picking out the interesting Malware from Dionaea">Picking out the interesting Malware from Dionaea</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2011-01-13T13:18:37+00:00">
+                Published: Thu 13 January 2011
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->                <ul>
+<li>Dionaea</li>
+<li>Honeypots</li>
+<li>Scripts</li>
+<li>Virustotal</li>
+</ul>
+<p>So once you have Dionaea up and running and scanning with Virustotal you want to pick out the more interesting malware from your ever expanding collection.</p>
+<p>I am choosing to define 'interesting' here as 'the least positive hits on virustotal.com', there are a number of reasons why this may very well not mean 'interesting' but I don't need to go in to those here. It is, at least, interesting enough.</p>
+<p>We're going to use the sqlite database to poke around, there's already been some SQL magic documented on <a href="http://carnivore.it/2010/10/07/virustotal_api">carnivore.it</a> that you should check out if this interests you.</p>
+<h3>Top 10 Undected Malware</h3>
+<div class="highlight"><pre><span></span><code><span class="err">SELECT</span>
+<span class="err">    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink</span>
+<span class="err">FROM</span>
+<span class="err">    virustotalscans, virustotals</span>
+<span class="err">WHERE</span>
+<span class="err">    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &#39;&#39;</span>
+<span class="err">GROUP BY</span>
+<span class="err">    virustotalscans.virustotal</span>
+<span class="err">ORDER BY</span>
+<span class="err">    hits asc;</span>
+</code></pre></div>
+
+<p>This produces a nice little list, which for me is:</p>
+<ol>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=15108894b48a088b525fc888562ccab612d213a77f7cbe2d2fe369b357e76caf-1294703586">18798b6904059c9408888fa05da02fe0</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=9ac43132f686480585b424eced49aa4fd81408cc17b78151fbb6ddf3a673e0b0-1294618143">0e19ae7fb3f3c70f81e321d4b2824d48</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=fe102a26eca4a3c0f30ac8244cf8d8b918922f39a9ee4e280657f07740a2e8d6-1294781657">022c02f4104a157fb8c04ec11f4b3ce3</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=cec0cef017b9f635dde1c7eeb202cdbb94eedbe9149be6d79609ca65b88c209c-1294628795">061a289056139e77388ad93bbab42d07</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=bbf39cce365ebc693595bb12519135f2712a9fd33a91635c942c15d1971f0b91-1294493585">3773d1e9d976659d1e18f390cec6d85a</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=700733a641f37469ef6bef8c661e20b10bbb3970dd6b05786f036fd6fdf16597-1294894604">524305279349c3e0ce187384fe87ca13</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=cc9b431b9d386b4224bacf6ac3dab9891633df7d84727447c38ce6196e4f1c01-1294629031">6170cd45f1e0cd5d22c7a80d3b4d23f7</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=d25dcf67c7c41ef92bdc4c27bad761c8bfeb3473d9d275d08dfad089da0c217e-1294848031">77296904b96d0905960a5ff23e5935db</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=2701edf555dd17b58d8b454719c7d0c54b096e2dc1e862256df1d0495b197e1d-1294713960">4535c1f0ac6749a3c452a9bd4b3df655</a></p>
+</li>
+<li>
+<p><a href="http://www.virustotal.com/file-scan/report.html?id=c17160a635aa7d3827c3ba4109e92c386fba246c77cd742c415c8e6dbae50328-1294831583">2894c4e7df8fc9eb7d87a22255def354</a></p>
+</li>
+</ol>
+<p>Obviously it's entirely possible that 1 year ago Dionaea submitted a piece of malware that is since detected by all of scanners, but it's still quite a handy list when picking through lots of files.</p>
+<p><strong>Update</strong></p>
+<p>Similarly, if you want to see the most obscure viruses in the past 7 days, only a little tweak is required:</p>
+<div class="highlight"><pre><span></span><code><span class="err">SELECT</span>
+<span class="err">    virustotalscans.virustotal,count(virustotalscans.virustotal) as hits,virustotal_md5_hash,virustotal_permalink</span>
+<span class="err">FROM</span>
+<span class="err">    virustotalscans, virustotals</span>
+<span class="err">WHERE</span>
+<span class="err">    virustotalscans.virustotal = virustotals.virustotal and virustotalscan_result != &#39;&#39; and virustotals.virustotal_timestamp &gt;= strftime(&#39;%s&#39;,&#39;now&#39;,&#39;-7 days&#39;)</span>
+<span class="err">GROUP BY</span>
+<span class="err">    virustotalscans.virustotal</span>
+<span class="err">ORDER BY</span>
+<span class="err">    hits asc;</span>
+</code></pre></div>
+                <a class="readmore" href="../2011/01/picking-out-the-interesting-malware-from-dionaea/">read more</a>
+<p>There are <a href="../2011/01/picking-out-the-interesting-malware-from-dionaea/#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../2011/01/getting-dionaea-to-scan-previously-collected-malware/" rel="bookmark"
+                           title="Permalink to Getting Dionaea to scan previously collected Malware">Getting Dionaea to scan previously collected Malware</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2011-01-10T14:52:39+00:00">
+                Published: Mon 10 January 2011
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->                <ul>
+<li>Dionaea</li>
+<li>Honeypots</li>
+<li>Virustotal
+tags:</li>
+<li>virustotal dionaea</li>
+</ul>
+<p><strong>Update:</strong> This is in old post and the scripts got lost when I moved hosts. There is a script here: <a href="http://carnivore.it/2010/10/07/virustotal_api">http://carnivore.it/2010/10/07/virustotal_api</a> under "processing backlog" that will do what I describe below.</p>
+<p>I finally got around to signing up for a <a href="http://www.virustotal.com/advanced.html#publicapi">Virustotal API key</a> and popping it in to my <a href="http://dionaea.carnivore.it/">Dionaea</a> configuration. This gave my logs a lot more information for the new malware that was collected. My problem was that all my previous files had no Virustotal scan information attached.</p>
+<p>This would not do, so I wrote a Python script to populate the 'vtcache.sqlite' database with all the previous, unscanned pieces of malware. This will cause dionaea to scan all of the old malware with Virustotal and update the dionaea database with all that tasty data.</p>
+<p>Most of the magic here is the work of dionaea, all my script does is copy some data from one table to another. You must have the old malware still and the script is written for a setup, like mine, where most of the logs and malware is just left at default.</p>
+<p>The script is set up with dionaea defaults for directories, if yours are different you will need to change them by editing the file.</p>
+<p>Once configured, simply run:</p>
+<blockquote>
+<p>python vupdate.py</p>
+</blockquote>
+<p>No output is good output. That's all! Any feedback is appreciated, this is definitely experimental so backup anything important before you run it.</p>
+                <a class="readmore" href="../2011/01/getting-dionaea-to-scan-previously-collected-malware/">read more</a>
+<p>There are <a href="../2011/01/getting-dionaea-to-scan-previously-collected-malware/#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+<p class="paginator">
+        <a href="../category/blog.html">&#8647;</a>
+        <a href="../category/blog4.html">&laquo;</a>
+    Page 5 / 7
+        <a href="../category/blog6.html">&raquo;</a>
+        <a href="../category/blog7.html">&#8649;</a>
+</p>
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Kippo Customisations</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="Honeypots SSH Having ran Kippo for a while now I am beginning to suspect that people are recognising the Kippo install and moving on. This isn't..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2010/11/kippo-customisations/" rel="bookmark"
+           title="Permalink to Kippo Customisations">Kippo Customisations</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2010-11-18T13:09:28+00:00">
+                Published: Thu 18 November 2010
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->      <ul>
+<li>Honeypots</li>
+<li>SSH</li>
+</ul>
+<p>Having ran Kippo for a while now I am beginning to suspect that people are recognising the Kippo install and moving on. This isn't too difficult as there are some fairly static  pieces of data that Kippo will provide you with should you request them. Fortunately it's very easy to change these as we see fit, so we will!</p>
+<p><strong>NOTE: Don't <em>just</em> do this.</strong> This is not exactly best security practice. I personally am using information about a computer that is not running Kippo and putting it on to a different server. If you just run the below commands on a computer running Kippo then an attacker is going to know all sorts of information about your computer that may give them the upper hand in an actual attack. At the very list edit the <strong>passwd</strong> file to replace usernames.</p>
+<p>The following commands are to illustrate what I have done. Copying and pasting may not be the best of ideas.</p>
+<p>Update <strong>honeyfs</strong>:</p>
+<blockquote>
+<div class="highlight"><pre><span></span><code><span class="err">cat /proc/cpuinfo &gt; kippo/honeyfs/proc/cpuinfo</span>
+<span class="err">cat /etc/issue &gt; kippo/honeyfs/etc/issue</span>
+<span class="err">cat /etc/passwd &gt; kippo/honeyfs/etc/passwd</span>
+</code></pre></div>
+
+</blockquote>
+<p>Update <strong>txtcmds</strong>:</p>
+<blockquote>
+<div class="highlight"><pre><span></span><code>dmesg &gt; kippo/txtcmds/bin/dmesg
+mount &gt; kippo/txtcmds/bin/mount
+#<span class="nt">&lt;em&gt;&lt;strong&gt;</span>definitely<span class="nt">&lt;/strong&gt;</span> change the I.P. addresses within this file
+<span class="nt">&lt;/em&gt;</span>ifconfig &gt; kippo/txtcmds/sbin/ifconfig
+</code></pre></div>
+
+</blockquote>
+<p>Next up I am going to add some more <strong>'programs'</strong></p>
+<blockquote>
+<div class="highlight"><pre><span></span><code><span class="err">php -v &gt; kippo/txtcmds/bin/</span>
+<span class="err">python --version &gt; kippo/txtcmds/bin/python</span>
+</code></pre></div>
+
+</blockquote>
+<p>Arguably these two may alert the attacker as they will be expecting to be able to type php and python rather than just get the version output but my hope is that it will fool them in to thinking that they are installed and encourage them to <em>wget</em> some of their tools.</p>
+<p>So now hopefully our honeypot will look more legitimate to the attacker, or at least one that has gotten used to stock Kippo installs. Only time will tell!</p>
+<blockquote></blockquote>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2010/11/kippo-customisations/';
+        var disqus_url = '../../../2010/11/kippo-customisations/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>The $15 (per year) Honeypot</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="Super low budget VPS servers make an ideal home for your own honeypot, this post takes you through setting up a feature packed honeypot on a..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2013/04/the-15-dollar-honeypot/" rel="bookmark"
+           title="Permalink to The $15 (per year) Honeypot">The $15 (per year) Honeypot</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2013-04-02T13:01:00+01:00">
+                Published: Tue 02 April 2013
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+<p>tags: <a href="../../../tag/honeypot.html">honeypot</a> </p>
+</footer><!-- /.post-info -->      <p><em>Super low budget VPS servers make an ideal home for your own honeypot, this
+post takes you through setting up a feature packed honeypot on a TinyVZ VPS.</em></p>
+<p>I'm always on the look out for a cheap place to a host a honeypot which is why
+I was pretty intrigued when I came accross a few companies offering $15
+ <strong>per year</strong> virtual private servers.</p>
+<p>This offer does seem to good to be true - and I don't plan on hosting anything
+important on my VPS - but I've been running one with <a href="http://tinyvz.com">TinyVZ</a>
+for 3 months now and had no problems to speak of.</p>
+<p>So, here's a quick guide to setting up your own $15 honeypot - though please
+don't treat this as a glowing endorsement of super cheap VPSs, when I paid my
+$15 I treated it more as placing a bet than purchasing a service.</p>
+<p>I have chosen <a href="http://tinyvz.com/">TinyVZ</a> as the host for this guide, you can
+almost certainly do this on other
+<a href="https://www.google.com/search?q=$15%20a%20year%20vps%20host">similarly cheap hosts</a>.
+Because this guide uses my
+<a href="/2013/01/automatic-honeypot-setup-script/">honeypot setup script</a>
+most of it revolves around navigating TinyVZ's control panel. I am not
+affiliated with TinyVZ.</p>
+<p>TinyVZ have confirmed that they are happy for their customers to run honeypots.</p>
+<h2>Setup</h2>
+<p><strong>Server Setup (TinyVZ Specific)</strong></p>
+<ul>
+<li>Sign up for a <a href="http://tinyvz.com/">TinyVZ</a> account (<em>this can take up to </em><em>3
+days</em>**)</li>
+<li>You will eventually receive a "New Server Information" email.</li>
+<li>Login to the <a href="https://my.ramhost.us/v2/vps/cp/">control panel</a> with the details
+provided.</li>
+<li>Click "Reload OS"</li>
+<li>Choose <strong>ubuntu-12.04-x86</strong> and push "Reload with selected OS"</li>
+<li>Once that's done go back to "Main Menu"</li>
+<li>Now copy the I.P. address of "Host Machine" and connect via SSH to this address</li>
+<li>When prompted enter username "vz" and password "vz"</li>
+<li>Now for "RAMCP Username" and "RAMCP Password" enter the username and password
+provided in the welcome email</li>
+<li>You should now be logged in as root</li>
+<li>Set a password with <code>passwd</code></li>
+<li>Install sudo:
+<code>apt-get update &amp;&amp; apt-get install sudo</code></li>
+</ul>
+<p><strong>Install (Ubuntu)</strong></p>
+<ul>
+<li>Now run the following: <code>wget -q
+https://raw.github.com/andrewmichaelsmith/honeypot-setup-script/master/setup.bash
+-O /tmp/setup.bash &amp;&amp; bash /tmp/setup.bash</code></li>
+</ul>
+<h2>Conclusion</h2>
+<p><strong>Tada</strong> - you should now have a full <a href="https://code.google.com/p/kippo/">Kippo</a>
+and <a href="http://dionaea.carnivore.it/">Dionaea</a> install. You can monitor
+<code>/var/kippo</code> and <code>/var/dionaea</code> for logs and binaries.</p>
+<p><strong>Security Considerations</strong>
+The default setup you are left with on this server is iffy at best. You should
+not really be logging in as root, I would advise at the very least following
+<a href="http://www.thegeekstuff.com/2011/05/openssh-options/">this guide on securing SSH</a>.</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2013/04/the-15-dollar-honeypot/';
+        var disqus_url = '../../../2013/04/the-15-dollar-honeypot/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

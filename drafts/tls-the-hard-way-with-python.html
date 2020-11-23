@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>TLS the hard way with python</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+        <meta name="description" content="I wanted to write an article about tor the hard way but that uses TLS. And in the middle of the article I didn't want to just hand off to some SSL..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../drafts/tls-the-hard-way-with-python.html" rel="bookmark"
+           title="Permalink to TLS the hard way with python">TLS the hard way with python</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2014-08-20T20:00:00+01:00">
+                Published: Wed 20 August 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+<p>tags: <a href="../tag/tls.html">tls</a> <a href="../tag/protocol.html">protocol</a> <a href="../tag/python.html">python</a> <a href="../tag/ssl.html">ssl</a> </p>
+</footer><!-- /.post-info -->      <p>I wanted to write an article about tor the hard way but that uses TLS. And in
+the middle of the article I didn't want to just hand off to some SSL library
+because that defeats the point.</p>
+<p>So, I'm going to kick off with TLS the hard way and follow up with a Tor
+article.</p>
+<p>Source: http://security.stackexchange.com/questions/20803/how-does-ssl-tls-work</p>
+<p>Looking at the Tor Spec we need  to support (among others, but we'll see if we
+can get away with this one) (TLS_DHE_RSA_WITH_AES_128_CBC_SHA|http://tools.ietf.org/html/rfc5246)
+which we decode as a DHE_RSA Key Exchange, a AES_128_CBC Cipher and a SHA Max
+(Andy: what's a Mac?)</p>
+<p>So let's pick DHE_RSA. This is apparently an Ephemeral Diffie-Hellman. </p>
+<p>The spec says:</p>
+<div class="highlight"><pre><span></span><code><span class="err">RSA public key; the certificate MUST allow the</span>
+<span class="err">digitalSignature bit MUST be set if the key</span>
+<span class="err">usage extension is present) with the signature</span>
+<span class="err">scheme and hash algorithm that will be employed</span>
+<span class="err">in the server key exchange message.</span>
+</code></pre></div>
+
+<p>RSA, how does that work?</p>
+<p>http://people.csail.mit.edu/rivest/Rsapaper.pdf</p>
+<p>Diffe Helman </p>
+<p>http://www4.ncsu.edu/~singer/437/proj38.pdf</p>
+<p>Signature, what does it look like?</p>
+<p>M(essage)
+S(ignature)</p>
+<p>Right?</p>
+<p>And you must .. perform a function on M(essage) to get S(ignature)</p>
+<p>So you must do ..</p>
+<div class="highlight"><pre><span></span><code><span class="err">    their_public_key(M) == S ?</span>
+</code></pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Docker Production Deployment</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+        <meta name="description" content="I'm a bit hesitant to write this blog post because the amount of discussion about docker production deployment is fucking overwhelming. But I want..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../drafts/docker-production-deployment.html" rel="bookmark"
+           title="Permalink to Docker Production Deployment">Docker Production Deployment</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2014-09-19T20:00:00+01:00">
+                Published: Fri 19 September 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../category/blog.html">Blog</a>.</p>
+<p>tags: <a href="../tag/docker.html">docker</a> <a href="../tag/coreos.html">coreos</a> <a href="../tag/fleet.html">fleet</a> </p>
+</footer><!-- /.post-info -->      <p>I'm a bit hesitant to write this blog post because the amount of discussion
+about docker production deployment is fucking overwhelming.</p>
+<p>But I want to (attempt to) get it clear in my head so I'm going to do it anyway.</p>
+<p>So I'll start with a story.</p>
+<p>At my place of work we had several seprate production deployments of our
+(slightly different for each) app. </p>
+<p>Unfortunately with a quick growing company and clients to please our code base 
+had become something of a (big ball of
+mud)[http://en.wikipedia.org/wiki/Big_ball_of_mud]. i</p>
+<p>The code itself had the right idea, various different bits of the app had their 
+own git repos. The problem was that most git repos depended upon each other.</p>
+<p>Hence our build process was a single job that built our entire code base in
+one fell swoop.</p>
+<p>The individual applications themselves were actually fine. For the most part
+each application that comprised our whole site could happily run independently
+on a server (just as long as even the smallest app had the entire code base sat
+with it on the server).</p>
+<p>We had the right idea we'd just missed some stuff along the way.</p>
+<p>Then (due, probably wholly, to the fact that management consists of developers)
+the company took the decision to fix it all.</p>
+<p>This involved moving to a Service Oriented Architecture. The idea being that
+seperate parts of our code could be built independently and run independently.
+Woohoo.</p>
+<p>With this came the decision to sort out our production (and with that, test and
+dev) environments. As it stood we were definitely running (Pets, not
+Cattle)[http://it20.info/2012/12/vcloud-openstack-pets-and-cattle/]. In fairness
+our servers were fairly uniform, but once a production server was up it was up.
+Also (to make supporting the servers simple) each server had a function: web,
+admin, api and so on.</p>
+<p>To do this, first we want the power to say:</p>
+<h1>Here are some applications: web, admin, api, rabbitmq, redis, couchbase. They</h1>
+<p>must be running, always.</p>
+<p>We also need to be able to say:</p>
+<h1>Api needs to know about rabbitmq, web, admin and api need to talk to</h1>
+<p>couchbase. api needs to talk to web.</p>
+<p>Oh yeah, and </p>
+<h1>Our clients running a promotion, make web and api faster (preferably by</h1>
+<p>running them on multiple servers)</p>
+<p>This wasn't really complicated enough for us so we decided we also wanted to be
+able to say </p>
+<h1>I've got this update for web but it's a big change. Run it somewhere but only</h1>
+<p>let 10% of our end users see it</p>
+<p>And definitely</p>
+<h1>Oh crap, that release has broken everything. Take it down, take it down now!</h1>
+<p>And of course</p>
+<h1>I want this fix to go up, everywhere, now. 10 times a day.</h1>
+<p>To deal with how this actually looks on the server and after looking at what 
+everyone else was doing there only seemed to be one option: Linux Containers!</p>
+<p>And if you look in to linux containers and tooling around them there's another
+clear option: Docker!</p>
+<p>So that's the end of that then. Throw some containers at our problems, sorted.</p>
+<p>Unfortunatley that isn't even the beginning of it. </p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

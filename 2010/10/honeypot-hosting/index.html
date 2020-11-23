@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <title>Honeypot Hosting</title>
+        <link rel="stylesheet" href="../../../theme/css/main.css" />
+        <meta name="description" content="Honeypots As I am just a honeypot hobbyist and not affiliated with any university or the security department of any organisation I have to host my..." />
+</head>
+
+<body id="index" class="home">
+<a href="https://github.com/andrewmichaelsmith/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="../../../">Andy Smith's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="../../../pages/contact.html">Contact</a></li>
+                    <li class="active"><a href="../../../category/blog.html">Blog</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../../../2010/10/honeypot-hosting/" rel="bookmark"
+           title="Permalink to Honeypot Hosting">Honeypot Hosting</a></h1>
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="bingleybeep">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2010-10-18T12:02:09+01:00">
+                Published: Mon 18 October 2010
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../../../author/andrew-smith.html">Andrew Smith</a>
+        </address>
+<p>In <a href="../../../category/blog.html">Blog</a>.</p>
+
+</footer><!-- /.post-info -->      <ul>
+<li>Honeypots</li>
+</ul>
+<p>As I am just a honeypot hobbyist and not affiliated with any university or the security department of any organisation I have to host my honeypots myself.</p>
+<p>Currently I rent a VPS to do this, a low spec server with two IP addresses. This is perfectly acceptable for my needs (after all, this is just a hobby) but with my lease expiring soon I decided to hunt for the perfect "honeypot host".</p>
+<p>There's little information on the internet regarding honeypot hosting and posts I have made in the past on forums have turned up nothing so I decided to contact the hosts directly.</p>
+<h2><strong>Results</strong></h2>
+<p>I contacted just over ten ISPs, specifically those that specialise in VPS hosting (because I'm cheap), here is what I asked them and what they said:</p>
+<p><strong>Q: Can I run a honeypot on your servers?</strong></p>
+<ul>
+<li><strong>A</strong><em> (best)</em>**: Yes</li>
+<li><strong><em>*A </em>*<em>(worst)</em></strong>: No**</li>
+</ul>
+<p>I didn't ask this question directly although it was discussed in the content of my email, to explain my IP address greed. I was surprised to find many hosts completely unwelcoming to the idea of having a honeypot on their servers. One response from those that weren't interested was that running one would <em>"put a target on everyone within the core infrastructure of that facility"</em> and this was not uncommon. Attempts to to explain that I wasn't exactly planning on sticking an unpatched Windows XP install on their systems were met with deaf ears.</p>
+<p><strong>Q: How many IP addresses can I get?</strong></p>
+<ul>
+<li><strong>A </strong><em>(most)</em>**: 5</li>
+<li>A <strong><em>(least)</em></strong>: 0**</li>
+</ul>
+<p>Obviously quite important for the purposes of running a honeypot, this was the main piece of information I was after. Unfortunately, the maximum offer I received was 8 (with 5 usable). Further enquiries led me to find that <a href="http://www.ripe.net/">RIPE</a> are (understandably) quite particular about what they give IP addresses out for and who to, after allocating a block to an ISP they will perform an audit and if the ISP aren't using the addresses as RIPE see fit they won't give them any more. I contacted RIPE about this, they weren't particularly informative and mostly eager to get me to sign up as a member.</p>
+<p><strong>Q: Can you guarantee a good dispersion of the addresses?</strong></p>
+<ul>
+<li><strong>A </strong><em>(best)</em><strong>: Probably not</strong></li>
+<li><strong>A </strong><em>(worst)</em><strong>: No</strong></li>
+</ul>
+<p>Generally the answer was that this was not possible as ISPs dish out IPs as they get them and also we generally themselves allocated in blocks. Either way, there was no way for any host contacted to guarantee such a service.</p>
+<h2><strong>The Hosts</strong></h2>
+<p>Those hosts the responded and were happy to host honeypots are as follows:</p>
+<ul>
+<li>
+<p><a href="http://www.slicehost.com/">Slicehost </a> - $2 per IP, Max. 5 IPs.</p>
+</li>
+<li>
+<p><a href="http://www.solarvps.com/"><strong>SolarVPS</strong></a> - No extra IPs.</p>
+</li>
+<li>
+<p><a href="http://www.tagadab.com/">Tagadab</a> - No charge, Max 5 IPs.</p>
+</li>
+<li>
+<p><a href="http://www.vpsland.com/">VPSLand</a> - $2 per IP, Max 5 IPs.</p>
+</li>
+</ul>
+<h2><strong>Conclusion</strong></h2>
+<p>All in all, fairly disappointing results, possibly hardly worth the blog post, except in the vain hope that I've missed some super host that can offer me all I need. This is by no means an extensive study but the responses are fairly bleak for those of us with limited resources, regardless, I hope this may save someone the time I expended.</p>
+<h2>Follow Up - 3 months on</h2>
+<p>This is a quick note I'm adding to the bottom of this article for anyone who finds it and wants to know what I did. I went with <a href="http://www.tagadab.com/">tagadab</a> in the end, as they had the best value and the most IPs on offer. Furthermore their support not only knew what a honeypot was but were welcoming towards the idea of hosting them. I got 5 IPs, they were unvaried (as I had been warned) and basically x.x.x.x, x.x.x.x+1, .. , x.x.x.x+4.</p>
+<p>The experience has been fine, the server stable and speedy and no bother for hosting honeypots. Exactly what I wanted.</p>
+<p>For those in the position I was 3 months ago I would give a piece of advice that I would like to have tried. From the get go I chose '5 IPs', the maximum, I realised that perhaps my impatience caused me to miss a trick. What I should have done is request 1 IP, then a week later another, then a week later another and so on until I had hit my maximum. This would have almost certainly resulted in a more varied selection of IPs.</p>
+<p>If you try this let me know how it works!</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ams-blog';
+        var disqus_identifier = '2010/10/honeypot-hosting/';
+        var disqus_url = '../../../2010/10/honeypot-hosting/';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ams-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-33475321-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'ams-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
