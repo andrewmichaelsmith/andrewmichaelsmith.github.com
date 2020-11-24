@@ -167,7 +167,7 @@ rsync -avz -e your_user@your_server:/home/your_user/Music/ /navidrome/music/
 <h2>Getting an entry point</h2>
 <p>So this is great - Navidrome is running and we can play our music from it! However, you may have noticed that our access currently
 depends upon the <code>kubectl port-forward</code> command above.</p>
-<p>That might be enough for you but likely won't be that stable and it also will mean that you can't set up a mobile application.</p>
+<p>That might be enough for you but likely won't be that stable and it also will mean that you can't connect a mobile app to Navidrome.</p>
 <p>This is where we need to set up an ingress. There are many <a href="https://kubernetes.github.io/ingress-nginx/deploy/">other posts</a> describing
 this set up so I won't get into that detail here.</p>
 <p>However, I will show you how I wired my existing nginx ingress controller:</p>
