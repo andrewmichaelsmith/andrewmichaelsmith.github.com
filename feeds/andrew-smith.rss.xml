@@ -88,8 +88,8 @@ this set up so I won't get into that detail here.&lt;/p&gt;
           &lt;span class="nt"&gt;servicePort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;4533&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+&lt;p&gt;&lt;img alt="Navidrome Dsub on Android" src="https://andrewmichaelsmith.com/images/navidrome-dsub-android.png#float-right" title="DSub on Android connected to Navidrome"&gt;&lt;/p&gt;
 &lt;p&gt;Here I'm using ingress to connect &lt;code&gt;navidrome.mydomain.net&lt;/code&gt; to &lt;code&gt;navidrome-1606039281&lt;/code&gt;. You can get the Service name by running &lt;code&gt;helm list&lt;/code&gt;. With this set up - I'm able to connect an Android app to my Navidrome instance:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Navidrome Dsub on Android" src="https://andrewmichaelsmith.com/images/navidrome-dsub-android.png" title="DSub on Android connected to Navidrome"&gt;&lt;/p&gt;
 &lt;p&gt;Note that the end point will be protected by the admin credentails that you setup, you'll likely want to consider setting up TLS on your ingress as well but I won't go into details of that here.&lt;/p&gt;
 &lt;h2&gt;Was it worth it?&lt;/h2&gt;
 &lt;p&gt;So I've been using this set up for a few weeks now and it works great, but was it worth it?&lt;/p&gt;
