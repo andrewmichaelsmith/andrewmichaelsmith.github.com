@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Andy Smith's Blog - Dionaea Honeypot on EC2  in 20 minutes</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
+        <link rel="stylesheet" type="text/css" href="https://andrewmichaelsmith.com/theme/css/main.css"/>
+            <link href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                  type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+</head>
+<body>
+<a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="fill:#8B8B7A; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+<style>.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+@keyframes octocat-wave {
+    0%, 100% {
+        transform: rotate(0)
+    }
+    20%, 60% {
+        transform: rotate(-25deg)
+    }
+    40%, 80% {
+        transform: rotate(10deg)
+    }
+}
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}</style><div id="container">
+    <header>
+        <h1><a href="https://andrewmichaelsmith.com/">Andy Smith's Blog</a></h1>
+            <ul class="social-media">
+                    <li><a href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                           type="application/atom+xml" rel="alternate"><i class="fa fa-rss fa-lg"
+                                                                          aria-hidden="true"></i></a></li>
+            </ul>
+        <p><em></em></p>
+    </header>
+    <nav>
+        <ul>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
+                    </li>
+        </ul>
+    </nav>
+<main>
+    <article>
+        <h1>Dionaea Honeypot on EC2  in 20 minutes</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2012-03-05 15:19:25+00:00">Mar 05, 2012</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                </li>
+            </ul>
+        </aside>
+        <ul>
+<li>Dionaea</li>
+<li>Ubuntu</li>
+</ul>
+<p>This is a tutorial on setting up Dionaea on an EC2 instance. Amazon currently off a <a href="http://aws.amazon.com/free/">free EC2 Micro Instance</a> so you should be able to do this too without any cost.</p>
+<h2>Pre-requisites</h2>
+<ul>
+<li><a href="http://aws.amazon.com/">Amazon AWS</a> account</li>
+</ul>
+<h2>EC2 Server Set up for Dionaea</h2>
+<ol>
+<li>
+<p>Sign in to your Amazon AWS console, choose the <strong>EC2 </strong>tab and choose a <strong>Region</strong> (I have chosen 'Ascia Pacific (Singapore)')
+<a href="/images/2012/03/1.png"><img alt="" src="/images/2012/03/1.png"></a></p>
+</li>
+<li>
+<p>Push <strong>Launch Instance </strong>and choose <strong>Classic Wizard </strong>and push <strong>Continue</strong>
+<a href="/images/2012/03/2.png"><img alt="" src="/images/2012/03/2.png"></a></p>
+</li>
+<li>
+<p>Click on the <strong>Community AMIs</strong> tab. Here you need a AMI for Ubuntu 10.04, these vary between AWS Regions. A list of AMIs is available <a href="http://cloud-images.ubuntu.com/releases/10.04/release/">here</a>. Pick an AMI with root store 'ebs' and arch '32-bit'.</p>
+</li>
+<li>
+<p>For Asia Pacific use the AMI <strong>ami-7289cd20 </strong>(Pick an AMI with root store 'ebs' and arch 32-bit), then push <strong>Select</strong>**
+<a href="/images/2012/03/3.png"><img alt="" src="/images/2012/03/3.png"></a></p>
+</li>
+<li>
+<p>Make sure to change the <strong>Instance Type</strong> to <strong>Micro</strong> (from Small), otherwise you will be charged, and push <strong>Continue</strong>
+<a href="/images/2012/03/4.png"><img alt="" src="/images/2012/03/4.png"></a></p>
+</li>
+<li>
+<p><strong>Continue</strong> until you are prompted to <strong>Create a Key Pair</strong>, choose a name and <strong>Create and Download Your Key Pair</strong> (save this file somewhere safe for later), push <strong>Continue</strong>
+.<a href="/images/2012/03/5.png"><img alt="" src="/images/2012/03/5.png"></a></p>
+</li>
+<li>
+<p>Choose to <strong>Create a New Security Group</strong>, for <strong>Create a new rule</strong> choose <strong>All TCP</strong> and <strong>Source</strong> choose <strong>0.0.0.0/0</strong>. Enter whatever you like in Name/Description. Push <strong>Add Rule</strong>
+<a href="/images/2012/03/6.png"><img alt="" src="/images/2012/03/6.png"></a></p>
+</li>
+<li>
+<p>Push <strong>Continue</strong> and then <strong>Launch</strong></p>
+</li>
+</ol>
+<p>Your server has now been set up and will shortly launch. Note that you have allowed TCP access to all services on this machine so do not install anything that could be compromised. It's possible to tighten up that security but it's a little more complicated - perhaps a subject for a later blog post.</p>
+<h2>Setting up Dionaea on your EC2 Server</h2>
+<ol>
+<li>
+<p>Find the address of your server by selecting it and choosing <strong>Instance Actions</strong> &gt; <strong>Connect</strong>. Follow the instruction to connect to your server using the key you generated and downloaded earlier. <em>Putty users may need to <a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html">use </a><a href="http://www.powercram.com/2009/07/connecting-to-aws-ec2-instance-linux.html">puttygen</a> to convert their key.</em></p>
+</li>
+<li>
+<p>Once you're connected you can have Dionaea up and running in minutes by following this tutorial: <a href="/2012/02/quick-install-of-dionaea-on-ubuntu/">/2012/02/quick-install-of-dionaea-on-ubuntu/</a></p>
+</li>
+</ol>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2012/03/dionaea-honeypot-on-ec2-in-20-minutes/";
+                this.page.identifier = "dionaea-honeypot-on-ec2-in-20-minutes";
+                this.page.title = "Dionaea Honeypot on EC2  in 20 minutes";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
+    <footer>
+        <h6>
+            Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a
+                href="https://github.com/aleylara/Peli-Kiera">Peli-Kiera</a> &nbsp;&bull;&nbsp; Copyright
+                &copy &nbsp;&#8209;&nbsp; Andrew Smith         </h6>
+    </footer>
+</div>
+</body>
+</html>

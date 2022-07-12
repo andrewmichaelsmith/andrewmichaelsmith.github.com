@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Andy Smith's Blog - Migrating from Google Music to Navidrome on Kubernetes</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
+        <link rel="stylesheet" type="text/css" href="https://andrewmichaelsmith.com/theme/css/main.css"/>
+            <link href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                  type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+<meta name="tags" content="kubernetes" />
+<meta name="tags" content="digital-ocean" />
+<meta name="tags" content="k8s" />
+<meta name="tags" content="google" />
+<meta name="tags" content="music" />
+<meta name="tags" content="navidrome" />
+</head>
+<body>
+<a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="fill:#8B8B7A; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+<style>.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+@keyframes octocat-wave {
+    0%, 100% {
+        transform: rotate(0)
+    }
+    20%, 60% {
+        transform: rotate(-25deg)
+    }
+    40%, 80% {
+        transform: rotate(10deg)
+    }
+}
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}</style><div id="container">
+    <header>
+        <h1><a href="https://andrewmichaelsmith.com/">Andy Smith's Blog</a></h1>
+            <ul class="social-media">
+                    <li><a href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                           type="application/atom+xml" rel="alternate"><i class="fa fa-rss fa-lg"
+                                                                          aria-hidden="true"></i></a></li>
+            </ul>
+        <p><em></em></p>
+    </header>
+    <nav>
+        <ul>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
+                    </li>
+        </ul>
+    </nav>
+<main>
+    <article>
+        <h1>Migrating from Google Music to Navidrome on Kubernetes</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2020-11-22 00:00:00+00:00">Nov 22, 2020</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                <li>
+                    Tags:
+                    <a href="https://andrewmichaelsmith.com/tag/kubernetes.html"><em>#kubernetes</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/digital-ocean.html"><em>#digital-ocean</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/k8s.html"><em>#k8s</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/google.html"><em>#google</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/music.html"><em>#music</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/navidrome.html"><em>#navidrome</em></a>
+                </li>
+            </ul>
+        </aside>
+        <p>When <a href="https://arstechnica.com/gadgets/2020/10/rip-google-play-music-2011-2020/">Google Music shut down</a>
+this month, instead of taking the easy way out and migrating to Youtube Music I decided to have a stab
+at hosting my music collection myself. I think that it went pretty well so I thought I'd share the details.</p>
+<p><strong>Disclaimer</strong>: This is certainly not the most cost effective or simple way to solve this problem. It's suitable
+for the fairly niche intersection of people who have a personal Kubernetes cluster and are too stubborn to 
+just give up and use Spotify.</p>
+<h2>Navidrome</h2>
+<p>Searching for an open source Google Music replacement, it didn't take too long to find <a href="https://www.navidrome.org/">Navidrome</a>, a modern web based streaming server written in Golang.</p>
+<p>It met my main fairly basic requirements:</p>
+<ul>
+<li>Browser based music streaming</li>
+<li>Mobile support (through <a href="https://play.google.com/store/apps/details?id=github.daneren2005.dsub&amp;hl=en_GB&amp;gl=US">DSub</a>)</li>
+<li>(nice to have) Multiple user support</li>
+</ul>
+<p>I discovered that this family of music streaming software tend to support the <a href="http://www.subsonic.org/pages/api.jsp">Subsonic API</a> which means that generally mobile and other apps are available for them and Just Work, which is pretty handy!</p>
+<h2>Navidrome on Kubernetes</h2>
+<p>I have a Kubernetes cluster that I use for tinkering (because that's the sort of person I am!).  It's mostly stable so it seemed sensible to put Navidrome there. Is this the simplest way to get this up and running? No. Is it a fun way to learn more about Kubernetes? Yes!</p>
+<p>There isn't an existing Helm chart (a type of Kubernetes package) for Navidrome so I made my own (<strong>experimental</strong>) chart. Here's how to get that set up in your existing Kubernetes cluster.</p>
+<h3>Create a PVC</h3>
+<p>The first thing you need to do is create a <code>PersistentVolumeClaim</code> where your music and Navidrome data files will go. Here's an example that I used to create a 250 GB volume on Digital Ocean (<code>storageClassName</code> will likely vary between cloud providers).</p>
+<div class="highlight"><span class="filename">pvc.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">navidrome</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">accessModes</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ReadWriteOnce</span>
+  <span class="nt">resources</span><span class="p">:</span>
+    <span class="nt">requests</span><span class="p">:</span>
+      <span class="nt">storage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">250Gi</span>
+  <span class="nt">storageClassName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do-block-storage</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>kubectl create -f pvc.yaml
+</code></pre></div>
+
+<h3>Install Navidrome</h3>
+<p>Once the PVC is created, we can install Navidrome and connect it up.</p>
+<div class="highlight"><pre><span></span><code>helm repo add navidrome https://andrewmichaelsmith.github.io/navidrome
+helm repo update   
+<span class="c1"># Note we&#39;re telling it to use the PVC called &quot;navidrome&quot; we created above</span>
+helm install --set persistence.enabled<span class="o">=</span><span class="nb">true</span> --set persistence.existingClaim<span class="o">=</span>navidrome navidrome/navidrome --generate-name
+</code></pre></div>
+
+<p>If this works, helm should output some values to for <code>POD_NAME</code> and <code>CONTAINER_PORT</code> that allows you run:</p>
+<div class="highlight"><pre><span></span><code>kubectl --namespace default port-forward <span class="nv">$POD_NAME</span> <span class="m">8080</span>:<span class="nv">$CONTAINER_PORT</span>
+</code></pre></div>
+
+<p>This should give you a running instance of Navidrome on <a href="http://localhost:8080">http://localhost:8080</a>, where you can set up an admin user and login (🎉):</p>
+<p><img alt="Navidrome empty home" src="https://andrewmichaelsmith.com/images/navidrome-empty.png" title="Navidrome empty home"></p>
+<h2>Adding Music</h2>
+<p>So this is great and everything, but we're still missing something quite important - the music!</p>
+<p>I am assuming that you have managed to <a href="https://lifehacker.com/save-your-google-play-music-library-before-it-disappear-1844624691">export your music</a> and have it on disk under <code>/home/your_user/Music</code>.</p>
+<p>This technique is a little hacky but for a one off it does the job and I was able to copy a large music collection easily in a day. What we're going to do is get the container to rsync the files from our machine.</p>
+<p><strong>This assumes you have an internet accessible SSH server (<code>your_server</code>) set up on the computer with the music collection</strong>.</p>
+<p>Let's jump on a shell in our Navidrome pod:</p>
+<div class="highlight"><pre><span></span><code>kubectl <span class="nb">exec</span> -ti <span class="nv">$POD_NAME</span> -- sh
+</code></pre></div>
+
+<p>Now, some set up. Here we get an SSH login working to your SSH server and then start copying the files:</p>
+<div class="highlight"><pre><span></span><code>apk add rsync openssh
+ssh-keygen
+ssh-copy-id your_user@your_server
+rsync -avz -e your_user@your_server:/home/your_user/Music/ /navidrome/music/
+</code></pre></div>
+
+<p>This will sync music from <code>/home/your_music/Music</code> on the server <code>your_user@your_server</code> in to where Navidrome looks for music (🎉!).</p>
+<p><strong>Note</strong>: If you find that some music isn't showing up, you may need to "Rescan server" from the web UI.</p>
+<h2>Getting an entry point</h2>
+<p>So this is great - Navidrome is running and we can play our music from it! However, you may have noticed that our access currently
+depends upon the <code>kubectl port-forward</code> command above.</p>
+<p>That might be enough for you but likely won't be that stable and it also will mean that you can't connect a mobile app to Navidrome.</p>
+<p>This is where we need to set up an ingress. There are many <a href="https://kubernetes.github.io/ingress-nginx/deploy/">other posts</a> describing
+this set up so I won't get into that detail here.</p>
+<p>However, I will show you how I wired my existing nginx ingress controller:</p>
+<div class="highlight"><span class="filename">ingress.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">navidrome-ingress</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">rules</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">navidrome.mydomain.net</span> 
+    <span class="nt">http</span><span class="p">:</span>
+      <span class="nt">paths</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">backend</span><span class="p">:</span>
+          <span class="nt">serviceName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">navidrome-1606039281</span>
+          <span class="nt">servicePort</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4533</span>
+</code></pre></div>
+
+<p><img alt="Navidrome Dsub on Android" src="https://andrewmichaelsmith.com/images/navidrome-dsub-android.png#float-right" title="DSub on Android connected to Navidrome"></p>
+<p>Here I'm using ingress to connect <code>navidrome.mydomain.net</code> to <code>navidrome-1606039281</code>. You can get the Service name by running <code>helm list</code>. With this set up - I'm able to connect an Android app to my Navidrome instance:</p>
+<p>Note that the end point will be protected by the admin credentails that you setup, you'll likely want to consider setting up TLS on your ingress as well but I won't go into details of that here.</p>
+<h2>Was it worth it?</h2>
+<p>So I've been using this set up for a few weeks now and it works great, but was it worth it?</p>
+<h3>Costs</h3>
+<p>As I've mentioned, this lives on an existing Kubernetes cluster, but if I were to do this from scratch how much it would it be?</p>
+<p>Prices are for Digital Ocean.</p>
+<ul>
+<li>2vCPU Server - $10/month</li>
+<li>Load Balancer - $10/month</li>
+<li>250 GB block storage - $25/month</li>
+</ul>
+<p>So that's $45 Navidrome on Kubernetes vs $0 Google Music. Not cheap!</p>
+<p>The key thing to understand here is that I'm already paying for the
+Server and Load Balancer for other projects. Admittedly, in 2020 it 
+still feels a bit steep to be paying $25/month for 250 GB but I can
+live with it.</p>
+<h3>Removing dependency on Google and using Open Source</h3>
+<p>This is a big win for me - I am on a slow, steady path
+to <a href="https://degooglisons-internet.org/en/">de-googlify</a> myself and this 
+is one step on that journey.</p>
+<p>It's also great to use a music streaming server that is under active development
+and that I can contribute to.</p>
+<h3>Conclusion</h3>
+<p>I'm pretty happy with my set up and if you have similar niche interests I'd recommend
+giving it a go!</p>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2020/11/migrating-from-google-music-to-navidrome-on-kubernetes/";
+                this.page.identifier = "migrating-from-google-music-to-navidrome-on-kubernetes";
+                this.page.title = "Migrating from Google Music to Navidrome on Kubernetes";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
+    <footer>
+        <h6>
+            Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a
+                href="https://github.com/aleylara/Peli-Kiera">Peli-Kiera</a> &nbsp;&bull;&nbsp; Copyright
+                &copy &nbsp;&#8209;&nbsp; Andrew Smith         </h6>
+    </footer>
+</div>
+</body>
+</html>
