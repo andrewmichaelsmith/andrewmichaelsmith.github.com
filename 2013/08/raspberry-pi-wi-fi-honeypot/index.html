@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Andy Smith's Blog - Raspberry Pi Wi-Fi Honeypot</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
+        <link rel="stylesheet" type="text/css" href="https://andrewmichaelsmith.com/theme/css/main.css"/>
+            <link href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                  type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+<meta name="tags" content="honeypots" />
+<meta name="tags" content="wi-fi" />
+<meta name="tags" content="raspberry-pi" />
+<meta name="tags" content="access-point" />
+</head>
+<body>
+<a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="fill:#8B8B7A; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+<style>.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+@keyframes octocat-wave {
+    0%, 100% {
+        transform: rotate(0)
+    }
+    20%, 60% {
+        transform: rotate(-25deg)
+    }
+    40%, 80% {
+        transform: rotate(10deg)
+    }
+}
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}</style><div id="container">
+    <header>
+        <h1><a href="https://andrewmichaelsmith.com/">Andy Smith's Blog</a></h1>
+            <ul class="social-media">
+                    <li><a href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                           type="application/atom+xml" rel="alternate"><i class="fa fa-rss fa-lg"
+                                                                          aria-hidden="true"></i></a></li>
+            </ul>
+        <p><em></em></p>
+    </header>
+    <nav>
+        <ul>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
+                    </li>
+        </ul>
+    </nav>
+<main>
+    <article>
+        <h1>Raspberry Pi Wi-Fi Honeypot</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2013-08-19 16:42:00+01:00">Aug 19, 2013</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                <li>
+                    Tags:
+                    <a href="https://andrewmichaelsmith.com/tag/honeypots.html"><em>#honeypots</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/wi-fi.html"><em>#wi-fi</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/raspberry-pi.html"><em>#raspberry-pi</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/access-point.html"><em>#access-point</em></a>
+                </li>
+            </ul>
+        </aside>
+        <p>I wanted to turn my Raspberry Pi in to a "fake" wireless access point that would accept
+Wi-Fi connections without a password but sandbox all requests to a local web server,
+like some hotel Wi-Fi you might encounter.</p>
+<p>It turns out that to achieve this you need a Wi-Fi dongle that supports "AP Mode".
+I ended up ordering an <a href="http://www.amazon.co.uk/Edimax-EW-7711UAN-Wireless-nLITE-Adapter/dp/B001KOTDDU">Edimax EW-7711UAN</a> which has worked perfectly in AP mode with the pi so far.</p>
+<p>For this tutorial I am assuming that your pi is physically connected to your network via a LAN cable (on eth0). We can't set this up over Wi-Fi because the Wi-Fi network is going to be sandboxed.</p>
+<h2>Install</h2>
+<p>So, beginning with a fresh <a href="http://www.raspbian.org/http://www.raspbian.org/">Raspian</a> install I installed the following:</p>
+<div class="highlight"><pre><span></span><code>sudo apt-get install -y hostapd dnsmasq nginx
+</code></pre></div>
+
+<ul>
+<li>
+<p>hostapd will allow you to receive connections on your dongle, as if it
+were a wireless router.</p>
+</li>
+<li>
+<p>Dnsmasq will allow the pi to provide DNS and DHCP services which is the bare minimum we need to get the clients to "work" on the network.</p>
+</li>
+<li>
+<p>Nginx is the web server we'll use to serve the dummy files on our sandboxed network.</p>
+</li>
+</ul>
+<h2>Configuration</h2>
+<p>First hostapd:</p>
+<div class="highlight"><pre><span></span><code>sudo touch /etc/hostapd/hostapd.conf
+sudo nano /etc/hostapd/hostapd.conf
+</code></pre></div>
+
+<p>And paste the following:</p>
+<div class="highlight"><pre><span></span><code>interface=wlan0
+driver=nl80211
+ssid=NotFreeWifi
+channel=1
+</code></pre></div>
+
+<p>We also need to tell hostapd where to find this config file:</p>
+<div class="highlight"><pre><span></span><code>sudo nano /etc/init.d/hostapd
+</code></pre></div>
+
+<p>Find the line:</p>
+<div class="highlight"><pre><span></span><code>DAEMON_CONF=
+</code></pre></div>
+
+<p>And change it to:</p>
+<div class="highlight"><pre><span></span><code>DAEMON_CONF=/etc/hostapd/hostapd.conf
+</code></pre></div>
+
+<p>This will set your pi up to accept unsecured connections. Don't do it if you
+don't know what you're doing.</p>
+<p>Next up, dnsmasq:</p>
+<div class="highlight"><pre><span></span><code>sudo nano /etc/dnsmasq.conf
+</code></pre></div>
+
+<p>And paste the following (at the end of the file):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">log</span><span class="o">-</span><span class="n">facility</span><span class="o">=/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">log</span><span class="w"></span>
+<span class="n">address</span><span class="o">=/</span><span class="c1">#/10.0.0.1</span><span class="w"></span>
+<span class="n">interface</span><span class="o">=</span><span class="n">wlan0</span><span class="w"></span>
+<span class="n">dhcp</span><span class="o">-</span><span class="nb">range</span><span class="o">=</span><span class="mf">10.0</span><span class="o">.</span><span class="mf">0.10</span><span class="p">,</span><span class="mf">10.0</span><span class="o">.</span><span class="mf">0.250</span><span class="p">,</span><span class="mi">12</span><span class="n">h</span><span class="w"></span>
+<span class="n">no</span><span class="o">-</span><span class="n">resolv</span><span class="w"></span>
+<span class="nb">log</span><span class="o">-</span><span class="n">queries</span><span class="w"></span>
+</code></pre></div>
+
+<p>This will set up the DHCP server, resolve all DNS lookups to <code>10.0.0.1</code> and log
+all queries to <code>/var/log/dnsmasq</code>.</p>
+<p>Now, you may have noticed that we used <code>10.0.0.1</code> there, the plan is to get the Wi-Fi
+adaptor listening on <code>10.0.0.1</code>. This is to segregate the open Wi-Fi connections from the regular network:</p>
+<div class="highlight"><pre><span></span><code>sudo nano /etc/network/interfaces
+</code></pre></div>
+
+<p>And <strong>replace</strong> the contents with:</p>
+<div class="highlight"><pre><span></span><code>auto lo
+
+iface lo inet loopback
+iface eth0 inet dhcp
+
+iface wlan0 inet static
+address 10.0.0.1
+netmask 255.255.255.0
+broadcast 255.0.0.0
+pre-up iptables-restore &lt; /etc/iptables.rules
+</code></pre></div>
+
+<p>Then, let's put a message in our www directory:</p>
+<div class="highlight"><pre><span></span><code>sudo echo &quot;&lt;h1&gt;hello!&lt;h1&gt;&quot; &gt; /usr/share/nginx/www/index.html
+</code></pre></div>
+
+<p>Finally, we want to lock down our pi so that anyone who gets on the open network can't get up to any funny business:</p>
+<div class="highlight"><pre><span></span><code>sudo iptables -F
+sudo iptables -i wlan0 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -p udp --dport 67:68 -j ACCEPT
+sudo iptables -i wlan0 -A INPUT -j DROP
+
+sudo sh -c &quot;iptables-save &gt; /etc/iptables.rules&quot;
+</code></pre></div>
+
+<p>Let's set up all these services to start on startup so it will just work each time we turn it on:</p>
+<div class="highlight"><pre><span></span><code>sudo update-rc.d nginx defaults
+sudo update-rc.d hostapd defaults
+sudo update-rc.d dnsmasq defaults
+</code></pre></div>
+
+<p>Now make sure this will work on boot by turning it off and on again:</p>
+<div class="highlight"><pre><span></span><code>sudo reboot
+</code></pre></div>
+
+<h2>Testing</h2>
+<p>If you do a Wi-Fi search on your laptop or phone you should now see "NotFreeWifi". If you connect and type in "www.blaargh.com" you should get the message we wrote out earlier.</p>
+<h2>Conclusion</h2>
+<p>Now if you're a normal human being you've probably just blindly pasted these commands in to your shell. If you'd like to know what you've set up, then read on!</p>
+<p>Using <strong>hostapd</strong> we've set up our wireless dongle to take unsecured (no passwords) connections using the SSID "NotFreeWifi". This will allow anyone with Wi-Fi on their laptop or phone or whatever to connect to the pi.</p>
+<p>On it's own this won't do much - clients won't be able to do anything once they connect -so we've setup <strong>Dnsmasq</strong> to give clients I.P. addresses and tell them use <code>10.0.0.1</code> (the pi's I.P.) as a gateway.</p>
+<p>We've also used Dnsmasq to provide a DNS server which we've (rather sneakily) set up  to give the address <code>10.0.0.1</code> to any request. So if someone tries to visit <code>facebook.com</code>, we tell them the address is <code>10.0.0.1</code></p>
+<p>Finally we've set up a webserver on the pi - so when users do try and go to <code>facebook.com</code> they actually connect to our pi - where we say hello to them.</p>
+<h2>Results</h2>
+<p>I've been running this on my pi for a week now and because of it's location I wasn't expecting to get any connections. Which is why I was pretty surprised to see that 5 people who weren't me have connected:</p>
+<div class="highlight"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">log</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="n">provides</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">awk</span><span class="w"> </span><span class="s1">&#39;{print $9}&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">uniq</span><span class="w"></span>
+
+<span class="n">android</span><span class="o">-</span><span class="n">xxxxxxxxxxxx2535</span><span class="w"></span>
+<span class="n">android</span><span class="o">-</span><span class="n">xxxxxxxxxxxx2c93</span><span class="w"></span>
+<span class="n">android</span><span class="o">-</span><span class="n">xxxxxxxxxxxx96cc</span><span class="w"></span>
+<span class="n">Axxxxx</span><span class="o">-</span><span class="n">iphone</span><span class="w"></span>
+<span class="n">BLACKBERRY</span><span class="o">-</span><span class="n">Exxx</span><span class="w"></span>
+</code></pre></div>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2013/08/raspberry-pi-wi-fi-honeypot/";
+                this.page.identifier = "raspberry-pi-wi-fi-honeypot";
+                this.page.title = "Raspberry Pi Wi-Fi Honeypot";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
+    <footer>
+        <h6>
+            Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a
+                href="https://github.com/aleylara/Peli-Kiera">Peli-Kiera</a> &nbsp;&bull;&nbsp; Copyright
+                &copy &nbsp;&#8209;&nbsp; Andrew Smith         </h6>
+    </footer>
+</div>
+</body>
+</html>

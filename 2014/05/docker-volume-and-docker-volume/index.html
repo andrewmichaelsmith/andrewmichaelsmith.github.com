@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Andy Smith's Blog - Categories</title>
+        <title>Andy Smith's Blog - Docker volume and docker VOLUME</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
@@ -12,6 +12,10 @@
             <link href="https://andrewmichaelsmith.com/
 feeds/all.atom.xml"
                   type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+<meta name="tags" content="docker" />
+<meta name="tags" content="volume" />
+<meta name="tags" content="VOLUME" />
 </head>
 <body>
 <a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
@@ -59,19 +63,81 @@ feeds/all.atom.xml"
     </header>
     <nav>
         <ul>
-                    <li><a href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
                     <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
                     </li>
         </ul>
     </nav>
-    <main>
-	    <section id="list">
-		    <h2>Number of Articles for Category </h2>
-		        <ul>
-					<li><a href="https://andrewmichaelsmith.com/category/blog.html">Blog</a> (27)</li>
-		        </ul>
-	    </section>
-    </main>
+<main>
+    <article>
+        <h1>Docker volume and docker VOLUME</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2014-05-19 22:01:00+01:00">May 19, 2014</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                <li>
+                    Tags:
+                    <a href="https://andrewmichaelsmith.com/tag/docker.html"><em>#docker</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/volume.html"><em>#volume</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/volume.html"><em>#VOLUME</em></a>
+                </li>
+            </ul>
+        </aside>
+        <p>I've been fiddling with docker lately and it took me a while to come to this 
+realisation. The docker volume command line argument and the docker VOLUME
+Dockerfile instruction are a bit different.</p>
+<p>The docker volume command line argument:</p>
+<div class="highlight"><pre><span></span><code>docker run -v /var/logs:/var/logs ubuntu <span class="nb">echo</span> <span class="nb">test</span>
+</code></pre></div>
+
+<p>And the docker VOLUME Dockerfile instruction:</p>
+<div class="highlight"><pre><span></span><code>VOLUME /var/logs
+</code></pre></div>
+
+<p>The Dockerfile VOLUME instruction doesn't support host directories.</p>
+<p>As discussed in this <a href="http://stackoverflow.com/a/18884005">stackoverflow post</a>
+it looks like this is intentional because it makes things less portable.</p>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2014/05/docker-volume-and-docker-volume/";
+                this.page.identifier = "docker-volume-and-docker-volume";
+                this.page.title = "Docker volume and docker VOLUME";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
     <footer>
         <h6>
             Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a

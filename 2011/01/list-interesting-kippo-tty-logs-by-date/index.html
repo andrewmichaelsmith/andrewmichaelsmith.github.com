@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Andy Smith's Blog - Categories</title>
+        <title>Andy Smith's Blog - List interesting Kippo TTY Logs by Date</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
@@ -12,6 +12,7 @@
             <link href="https://andrewmichaelsmith.com/
 feeds/all.atom.xml"
                   type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
 </head>
 <body>
 <a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
@@ -59,19 +60,73 @@ feeds/all.atom.xml"
     </header>
     <nav>
         <ul>
-                    <li><a href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
                     <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
                     </li>
         </ul>
     </nav>
-    <main>
-	    <section id="list">
-		    <h2>Number of Articles for Category </h2>
-		        <ul>
-					<li><a href="https://andrewmichaelsmith.com/category/blog.html">Blog</a> (27)</li>
-		        </ul>
-	    </section>
-    </main>
+<main>
+    <article>
+        <h1>List interesting Kippo TTY Logs by Date</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2011-01-24 12:35:09+00:00">Jan 24, 2011</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                </li>
+            </ul>
+        </aside>
+        <ul>
+<li>Honeypots</li>
+<li>Kippo</li>
+<li>Scripts</li>
+</ul>
+<p>A quick one, mostly a reference. It seems those .log files that are 87 bytes tend to be connections followed swiftly by disconnects.
+<code></code></p>
+<p><code>ls -alFhL ~/kippo/log/tty | grep -v 87</code></p>
+<p>Then we can skim through our list</p>
+<p><code>python ~/kippo/utils/playlog.py ~/kippo/log/tty/20110124-x-x.log</code></p>
+<p>What I would love for Kippo is some form of online tool to allow you to 'work through' an annotate the (wonderful) tty logs.</p>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2011/01/list-interesting-kippo-tty-logs-by-date/";
+                this.page.identifier = "list-interesting-kippo-tty-logs-by-date";
+                this.page.title = "List interesting Kippo TTY Logs by Date";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
     <footer>
         <h6>
             Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a

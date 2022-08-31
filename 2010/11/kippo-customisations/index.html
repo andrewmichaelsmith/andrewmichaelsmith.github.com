@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Andy Smith's Blog - Kippo Customisations</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
+        <link rel="stylesheet" type="text/css" href="https://andrewmichaelsmith.com/theme/css/main.css"/>
+            <link href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                  type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+</head>
+<body>
+<a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="fill:#8B8B7A; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+<style>.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+@keyframes octocat-wave {
+    0%, 100% {
+        transform: rotate(0)
+    }
+    20%, 60% {
+        transform: rotate(-25deg)
+    }
+    40%, 80% {
+        transform: rotate(10deg)
+    }
+}
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}</style><div id="container">
+    <header>
+        <h1><a href="https://andrewmichaelsmith.com/">Andy Smith's Blog</a></h1>
+            <ul class="social-media">
+                    <li><a href="https://andrewmichaelsmith.com/
+feeds/all.atom.xml"
+                           type="application/atom+xml" rel="alternate"><i class="fa fa-rss fa-lg"
+                                                                          aria-hidden="true"></i></a></li>
+            </ul>
+        <p><em></em></p>
+    </header>
+    <nav>
+        <ul>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
+                    </li>
+        </ul>
+    </nav>
+<main>
+    <article>
+        <h1>Kippo Customisations</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2010-11-18 13:09:28+00:00">Nov 18, 2010</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                </li>
+            </ul>
+        </aside>
+        <ul>
+<li>Honeypots</li>
+<li>SSH</li>
+</ul>
+<p>Having ran Kippo for a while now I am beginning to suspect that people are recognising the Kippo install and moving on. This isn't too difficult as there are some fairly static  pieces of data that Kippo will provide you with should you request them. Fortunately it's very easy to change these as we see fit, so we will!</p>
+<p><strong>NOTE: Don't <em>just</em> do this.</strong> This is not exactly best security practice. I personally am using information about a computer that is not running Kippo and putting it on to a different server. If you just run the below commands on a computer running Kippo then an attacker is going to know all sorts of information about your computer that may give them the upper hand in an actual attack. At the very list edit the <strong>passwd</strong> file to replace usernames.</p>
+<p>The following commands are to illustrate what I have done. Copying and pasting may not be the best of ideas.</p>
+<p>Update <strong>honeyfs</strong>:</p>
+<blockquote>
+<div class="highlight"><pre><span></span><code>cat /proc/cpuinfo &gt; kippo/honeyfs/proc/cpuinfo
+cat /etc/issue &gt; kippo/honeyfs/etc/issue
+cat /etc/passwd &gt; kippo/honeyfs/etc/passwd
+</code></pre></div>
+
+</blockquote>
+<p>Update <strong>txtcmds</strong>:</p>
+<blockquote>
+<div class="highlight"><pre><span></span><code>dmesg &gt; kippo/txtcmds/bin/dmesg
+mount &gt; kippo/txtcmds/bin/mount
+#<span class="nt">&lt;em&gt;&lt;strong&gt;</span>definitely<span class="nt">&lt;/strong&gt;</span> change the I.P. addresses within this file
+<span class="nt">&lt;/em&gt;</span>ifconfig &gt; kippo/txtcmds/sbin/ifconfig
+</code></pre></div>
+
+</blockquote>
+<p>Next up I am going to add some more <strong>'programs'</strong></p>
+<blockquote>
+<div class="highlight"><pre><span></span><code>php -v &gt; kippo/txtcmds/bin/
+python --version &gt; kippo/txtcmds/bin/python
+</code></pre></div>
+
+</blockquote>
+<p>Arguably these two may alert the attacker as they will be expecting to be able to type php and python rather than just get the version output but my hope is that it will fool them in to thinking that they are installed and encourage them to <em>wget</em> some of their tools.</p>
+<p>So now hopefully our honeypot will look more legitimate to the attacker, or at least one that has gotten used to stock Kippo installs. Only time will tell!</p>
+<blockquote></blockquote>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2010/11/kippo-customisations/";
+                this.page.identifier = "kippo-customisations";
+                this.page.title = "Kippo Customisations";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
+    <footer>
+        <h6>
+            Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a
+                href="https://github.com/aleylara/Peli-Kiera">Peli-Kiera</a> &nbsp;&bull;&nbsp; Copyright
+                &copy &nbsp;&#8209;&nbsp; Andrew Smith         </h6>
+    </footer>
+</div>
+</body>
+</html>

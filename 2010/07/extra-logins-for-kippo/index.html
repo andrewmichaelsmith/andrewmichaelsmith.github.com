@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Andy Smith's Blog - Categories</title>
+        <title>Andy Smith's Blog - Extra logins for Kippo</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
@@ -12,6 +12,7 @@
             <link href="https://andrewmichaelsmith.com/
 feeds/all.atom.xml"
                   type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
 </head>
 <body>
 <a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
@@ -59,19 +60,71 @@ feeds/all.atom.xml"
     </header>
     <nav>
         <ul>
-                    <li><a href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
                     <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
                     </li>
         </ul>
     </nav>
-    <main>
-	    <section id="list">
-		    <h2>Number of Articles for Category </h2>
-		        <ul>
-					<li><a href="https://andrewmichaelsmith.com/category/blog.html">Blog</a> (27)</li>
-		        </ul>
-	    </section>
-    </main>
+<main>
+    <article>
+        <h1>Extra logins for Kippo</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2010-07-11 09:18:13+01:00">Jul 11, 2010</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                </li>
+            </ul>
+        </aside>
+        <ul>
+<li>SSH</li>
+</ul>
+<p>Having run <a href="http://code.google.com/p/kippo/">Kippo</a> for a few days now I am yet to get a successful login. 931 failed login attempts so far. This is due to the fact that by default Kippo only accepts two combinations of username and password: root and 123456. This can be easily altered by editing Kippo.tac. So it made sense to use the usernames and passwords that had been tried against my honeypot an feed them back in.</p>
+<p>I did this using this, probably unnecessarily complex, bit of shell script:</p>
+<blockquote>
+<p>cat log/kippo.log | grep attempt | awk '{ print $9 }' | sed -e 's/[//'g | sed -e 's/]//'g | sed -e 's///'', '/g | awk ' { print "(x27"$0"x27)," } ' | uniq</p>
+</blockquote>
+<p>This produces a nice long list of 921 usernames and passwords that can then be pasted in to the Kippo configuration file. It's now up and running so hopefully I will get a few more bites.</p>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2010/07/extra-logins-for-kippo/";
+                this.page.identifier = "extra-logins-for-kippo";
+                this.page.title = "Extra logins for Kippo";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
     <footer>
         <h6>
             Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a

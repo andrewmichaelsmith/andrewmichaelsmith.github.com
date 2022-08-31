@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Andy Smith's Blog - Categories</title>
+        <title>Andy Smith's Blog - cloud-config validate without cloudinit</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"/>
@@ -12,6 +12,10 @@
             <link href="https://andrewmichaelsmith.com/
 feeds/all.atom.xml"
                   type="application/atom+xml" rel="alternate" title="Andy Smith's Blog Atom Feed"/>
+
+<meta name="tags" content="coreos" />
+<meta name="tags" content="cloud-config" />
+<meta name="tags" content="hack" />
 </head>
 <body>
 <a href="https://github.com/andrewmichaelsmith/" class="github-corner" aria-label="View source on GitHub">
@@ -59,19 +63,74 @@ feeds/all.atom.xml"
     </header>
     <nav>
         <ul>
-                    <li><a href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
+                    <li><a                         class="active" href="https://andrewmichaelsmith.com/category/blog.html"> Blog </a></li>
                     <li><a href="https://andrewmichaelsmith.com/pages/contact.html">Contact</a>
                     </li>
         </ul>
     </nav>
-    <main>
-	    <section id="list">
-		    <h2>Number of Articles for Category </h2>
-		        <ul>
-					<li><a href="https://andrewmichaelsmith.com/category/blog.html">Blog</a> (27)</li>
-		        </ul>
-	    </section>
-    </main>
+<main>
+    <article>
+        <h1>cloud-config validate without cloudinit</h1>
+        
+        <aside>
+            <ul>
+                <li>
+                    <time datetime="2016-04-09 00:00:00+01:00">Apr 09, 2016</time>
+                </li>
+                <li>
+                    Categories:
+                    <a href="https://andrewmichaelsmith.com/category/blog.html"><em>Blog</em></a>
+                </li>
+                <li>
+                    Tags:
+                    <a href="https://andrewmichaelsmith.com/tag/coreos.html"><em>#coreos</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/cloud-config.html"><em>#cloud-config</em></a>
+                    <a href="https://andrewmichaelsmith.com/tag/hack.html"><em>#hack</em></a>
+                </li>
+            </ul>
+        </aside>
+        <p>A quick hack to let you validate your CoreOS cloud-config user_data file without 
+having to install coreos-cloudinit (though you do need internet access):</p>
+<div class="highlight"><pre><span></span><code><span class="n">curl</span><span class="w"> </span><span class="s1">&#39;https://validate.core-os.net/validate&#39;</span><span class="w"> </span><span class="o">-</span><span class="n">X</span><span class="w"> </span><span class="n">PUT</span><span class="w"> </span><span class="c1">--data-binary &#39;@user_data&#39;</span>
+</code></pre></div>
+
+<p>This makes use of <a href="https://coreos.com/validate/">CoreOS's online validator</a>, but 
+without having to copy/paste which can be a little fiddly when SSH'd somewhere.</p>
+    </article>
+    <section class="post-nav">
+        <div id="left-page">
+            <div id="left-link">
+            </div>
+        </div>
+        <div id="right-page">
+            <div id="right-link">
+            </div>
+        </div>
+    </section>
+    <div>
+    <div class="comments">
+        <h2>Comments !</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = "https://andrewmichaelsmith.com/2016/04/cloud-config-validate-without-cloudinit/";
+                this.page.identifier = "cloud-config-validate-without-cloudinit";
+                this.page.title = "cloud-config validate without cloudinit";
+            };
+            (function () {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://ams-blog.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments
+            powered by
+            Disqus.</a></noscript>
+    </div>
+    </div>
+</main>
     <footer>
         <h6>
             Rendered by <a href="http://getpelican.com/">Pelican</a> &nbsp;&bull;&nbsp; Theme by <a
